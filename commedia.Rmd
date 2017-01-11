@@ -1,0 +1,41 @@
+---
+title: "Notes"
+output: html_notebook
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidytext); library(dplyr); library(gutenbergr); library(stringr)
+```
+
+
+```{r}
+
+gutenberg_works() %>%
+  filter(str_detect(author, 'Dante'))
+
+```
+
+
+```{r}
+commedia <- 
+  gutenberg_download(1004) %>%
+  # Remove header and footer matter
+  slice(269:19842) %>%
+  # Number lines for reference
+  mutate(line = row_number()) %>%
+  unnest_tokens(word, text) %>%
+  mutate(word = str_extract(word, "[a-z]+"))
+
+commedia_afinn <-
+  commedia %>%
+  inner_join(get_sentiments("afinn")) %>% 
+  #summarise(sentiment = sum(score)) %>% 
+  mutate(method = "AFINN")
+
+commedia %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(word, sentiment, sort = TRUE) %>%
+  ungroup()
+  
+```
+
