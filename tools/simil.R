@@ -1,5 +1,5 @@
 
-library(stringdist); library(tidyr)
+library(stringdist); library(tidyr); library(dplyr)
 
 tot_words <- nrow(commedia)
 
@@ -20,6 +20,13 @@ str2 <-
          rank = row_number(),
          freq = n/total) %>%
   slice(1:500)
+
+str1 <- pound_trigrams %>% select(word = trigram) %>% sample_n(1000) %>% distinct() 
+str2 <- frost_trigrams %>% select(word = trigram) %>% sample_n(1000) %>% distinct()  
+
+
+str1 <- words %>% anti_join(stop_words) %>% sample_n(1000)
+str2 <- words %>% anti_join(stop_words) %>% sample_n(1000)
 
 
 dist <- stringdist(str1$word, str2$word, method = "soundex")
@@ -47,6 +54,13 @@ rhyme <-
   filter(score == 0) %>%
   # remove exact rhymes
   filter(rawtext != coded)
+
+# Notes:
+# Option to remove suffixes (e.g. -ness, -est, etc.)
+# Option to remove words with same first letter
+# Take a string and find all permutations of it (words, bigrams, trigrams)
+# Pass df of words in chunks to stringdistmatrix() and combine (so don't have to slice)
+# Remove dups from strings before passing to stringdistmatrix()
 
   tst2 <-
   tst %>%
