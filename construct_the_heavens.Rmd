@@ -1,0 +1,72 @@
+---
+title: "Notebook"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse); library(magrittr); library(stringr); library(tidytext); library(stringdist)
+```
+
+#### Get books
+
+from *[Philosophical transactions of the Royal Society](https://archive.org/details/philosophicaltransactions)* 
+
+```{r get_books, message=FALSE, warning=FALSE, include=FALSE}
+
+# On the Construction of the Heavens. By William Herschel, Esq. 
+# Philosophical Transactions of the Royal Society of London (1776-1886).
+construct_heaven <- 
+  readLines("https://ia600504.us.archive.org/12/items/philtrans02233147/02233147_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "On the Construction of the Heavens",
+    author = "Herschel, William"
+  )
+
+# On the Nature and Construction of the Sun and Fixed Stars. By William Herschel
+# Philosophical Transactions of the Royal Society of London (1776-1886).
+construct_sun <- 
+  readLines("https://ia800500.us.archive.org/16/items/philtrans08894694/08894694_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "On the Nature and Construction of the Sun and Fixed Stars",
+    author = "Herschel, William"
+  )
+
+# Catalogue of a Second Thousand of New Nebulae and Clusters of Stars; 
+# With a Few Introductory Remarks on the Construction of the Heavens. 
+# By William Herschel, W Philosophical Transactions of the Royal Society of London (1789).
+construct_nebulae <- 
+  readLines("https://ia800701.us.archive.org/11/items/philtrans08124673/08124673_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "Catalogue of a Second Thousand of New Nebulae and Clusters of Stars With a Few Introductory Remarks on the Construction of the Heavens",
+    author = "Herschel, William"
+  )
+
+construct_heaven %<>%
+  bind_rows(construct_sun) %>%
+  bind_rows(construct_nebulae)
+
+rm(construct_sun); rm(construct_nebulae)
+
+```
+
+#### Find
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
