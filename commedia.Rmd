@@ -5,6 +5,7 @@ output: html_notebook
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidytext); library(dplyr); library(gutenbergr); library(stringr)
+library(tidyr)
 ```
 
 
@@ -14,6 +15,7 @@ gutenberg_works() %>%
   filter(str_detect(author, 'Dante'))
 
 ```
+
 
 
 ```{r}
@@ -32,10 +34,23 @@ commedia_afinn <-
   #summarise(sentiment = sum(score)) %>% 
   mutate(method = "AFINN")
 
-commedia %>%
+commedia_bing <-
+  commedia %>%
   inner_join(get_sentiments("bing")) %>%
   count(word, sentiment, sort = TRUE) %>%
   ungroup()
+
+tst <-
+  commedia %>%
+  mutate(word_num = row_number()) %>%
+  left_join(get_sentiments("nrc")) %>%
+  mutate(is = !is.na(sentiment)) %>%
+  group_by(gutenberg_id,line,word,word_num) %>%
+  spread(sentiment, is) %>%
+  select(gutenberg_id:trust) %>%
+  left_join(get_sentiments("bing")) %>%
+  left_join(get_sentiments("afinn"))
+  
   
 ```
 
