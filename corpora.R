@@ -32,7 +32,7 @@ corpus <-
   nest()
 
 tst <-
-  corpus %>%
+  corpus %>% unnest()
   mutate(
     words = map(.data, unnest_tokens(.word, .text))
   )

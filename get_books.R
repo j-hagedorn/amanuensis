@@ -1,7 +1,6 @@
 # Getcha lexica
 
 # Use stringdist to find all words most similar to / distinct from a given word
-
 library(tidyverse); library(magrittr)
 
 # Get works from Project Gutenberg
@@ -19,76 +18,51 @@ gutenberg_subjects %>% View()
 ##### Paradise Lost ######
 
 paradiselost <-
-gutenberg_download(20) %>%
+  gutenberg_download(20,meta_fields = c("title","author"),strip = T) %>%
   # Label books
-  mutate(book = cumsum(str_detect(text,regex("^  BOOK",ignore_case = F)))) %>%
+  mutate(section = cumsum(str_detect(text,regex("^  BOOK",ignore_case = F)))) %>%
   # Remove filler text between books
   filter(text != "  PARADISE LOST") %>%
   filter(grepl("*THE END OF THE*",text) == F) %>%
   # Remove header and footer matter
   slice(26:10980) %>%
   # Number lines for reference
-  mutate(line = row_number()) %>%
-  unnest_tokens(word, text) %>%
-  mutate(word = str_extract(word, "[a-z]+"))
+  mutate(line = row_number()) 
 
 ##### Leaves of Grass ######
 
 leaves <-
-  gutenberg_download(1322) %>%
+  gutenberg_download(1322,meta_fields = c("title","author"),strip = T) %>%
   # Label books
-  mutate(book = cumsum(str_detect(text,regex("^BOOK ",ignore_case = F)))) %>%
+  mutate(section = cumsum(str_detect(text,regex("^BOOK ",ignore_case = F)))) %>%
   # Remove header and footer matter
   slice(23:17859) %>%
   # Number lines for reference
-  mutate(line = row_number()) %>%
-  unnest_tokens(word, text) %>%
-  mutate(word = str_extract(word, "[a-z]+"))
+  mutate(line = row_number()) 
 
-##### Leaves of Grass ######
-
-leaves <-
-  gutenberg_download(1322) %>%
-  # Label books
-  mutate(book = cumsum(str_detect(text,regex("^BOOK ",ignore_case = F)))) %>%
-  # Remove header and footer matter
-  slice(23:17859) %>%
-  # Number lines for reference
-  mutate(line = row_number()) %>%
-  unnest_tokens(word, text) %>%
-  mutate(word = str_extract(word, "[a-z]+"))
 
 ##### Moby Dick ######
 
 moby <-
-  gutenberg_download(2489) %>%
+  gutenberg_download(2489,meta_fields = c("title","author"),strip = T) %>%
   # Label chapters
-  mutate(chapter = cumsum(str_detect(text,regex("^*CHAPTER [[:digit:]]",ignore_case = F)))) %>%
+  mutate(section = cumsum(str_detect(text,regex("^*CHAPTER [[:digit:]]",ignore_case = F)))) %>%
   # Number lines for reference
-  mutate(line = row_number()) %>%
-  unnest_tokens(word, text) %>%
-  mutate(word = str_extract(word, "[a-z]+"))
+  mutate(line = row_number()) 
 
 ##### Keats' Collected Works #####
 
 keats <-
-  gutenberg_download(c(8209,23684)) %>%
+  gutenberg_download(c(8209,23684),meta_fields = c("title","author"),strip = T) %>%
   # Remove header and footer matter
   slice(21:6253) %>%
   # Remove commentary
-  slice(c(1:2104,2715:6233)) %>%
-  unnest_tokens(word, text) %>%
-  mutate(word = str_extract(word, "[a-z]+")) %>% 
-  filter(is.na(word) == F)
+  slice(c(1:2104,2715:6233)) 
 
 #### Frost Poems
 
-frost <- gutenberg_download(c(3021, 3026, 29345))
-
-frost_trigrams <-
-  frost %>%
-  slice(c(84:1046,1061:1070,1095:3258,3341:5228)) %>%
-  unnest_tokens(trigram, text, token = "ngrams", n = 3)
+frost <- 
+  gutenberg_download(c(3021, 3026, 29345),meta_fields = c("title","author"),strip = T)
 
 ##### Donne Poems
 
@@ -102,11 +76,6 @@ tst <-
 ##### Pound
 
 pound <- gutenberg_download(c(23538,40200,41162,51992))
-
-pound_trigrams <- 
-  pound %>% 
-  slice(c(76:683,734:1783,1946:3566,3861:6274)) %>%
-  unnest_tokens(trigram, text, token = "ngrams", n = 3) 
 
 ##### Emily Dickinson
 
