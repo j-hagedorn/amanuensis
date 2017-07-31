@@ -1,0 +1,74 @@
+---
+title: "of_the_in_the_and_the_to_the"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse);library(magrittr);library(stringr);library(tidytext);library(gutenbergr);library(stringdist)
+```
+
+#### Get books
+
+```{r}
+# Get initial bigram from Whitman
+
+leaves_bigrams <- 
+  gutenberg_download(1322) %>%
+  # Label books
+  mutate(book = cumsum(str_detect(text,regex("^BOOK ",ignore_case = F)))) %>%
+  # Remove header and footer matter
+  slice(23:17859) %>%
+  # Number lines for reference
+  mutate(line = row_number()) %>%
+  unnest_tokens(bigram, text, token = "ngrams", n = 2) %>%
+  group_by(line) %>%
+  mutate(line_order = row_number()) %>%
+  ungroup() %>%
+  # only first bigram per line
+  filter(line_order == 1) %>%
+  count(bigram, sort = TRUE) %>%
+  slice(1:100) %>%
+  select(bigram)
+
+# Get end words from Dante
+
+commedia_trigrams <- 
+  gutenberg_download(1004) %>%
+  # Remove header and footer matter
+  slice(269:19842) %>%
+  # Number lines for reference
+  mutate(line = row_number()) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) %>%
+  group_by(line) %>%
+  mutate(line_order = row_number()) %>%
+  # only first bigram per line
+  filter(line_order == max(line_order)) %>%
+  ungroup %>%
+  count(trigram, sort = TRUE) %>%
+  slice(1:100) %>%
+  select(trigram)
+```
+
+
+```{r}
+str1 <- 
+  commedia %>% 
+  filter(is.na(word) == F) %>%
+  count(word, sort = T) %>%  
+  mutate(total = tot_words,
+         rank = row_number(),
+         freq = n/total) %>%
+  slice(1:500)
+  
+str2 <- 
+  leaves %>% 
+  filter(is.na(word) == F) %>%
+  count(word, sort = T) %>%  
+  mutate(total = tot_words,
+         rank = row_number(),
+         freq = n/total) %>%
+  slice(1:500)
+```
+
+
+
