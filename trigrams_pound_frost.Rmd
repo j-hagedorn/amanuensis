@@ -1,0 +1,123 @@
+---
+title: "trigrams from pound & frost"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse); library(magrittr); library(stringr); library(tidytext); 
+library(gutenbergr); library(stringdist); library(DT)
+```
+
+#### Get texts
+
+```{r get_books}
+frost <- gutenberg_download(c(3021, 3026, 29345))
+
+frost_trigrams <-
+  frost %>%
+  slice(c(84:1046,1061:1070,1095:3258,3341:5228)) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3)
+
+pound <- gutenberg_download(c(23538,40200,41162,51992))
+
+pound_trigrams <- 
+  pound %>% 
+  slice(c(76:683,734:1783,1946:3566,3861:6274)) %>%
+  unnest_tokens(trigram, text, token = "ngrams", n = 3) 
+```
+
+#### Find patterns
+
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+str1 <- pound_trigrams %>% select(word = trigram) %>% sample_n(1000) %>% distinct() 
+str2 <- frost_trigrams %>% select(word = trigram) %>% sample_n(1000) %>% distinct()  
+
+source("tools/simil.R")
+
+rearrange(str1$word, str2$word) %>% datatable(rownames = F,filter = "top")
+
+```
+
+#### Gleanings
+
+another day thin and over again
+the wheel turns the withered tree
+
+war they made of the dead
+at worm turning the sun something
+the vasty deep that lifted eyes
+
+with the view worth the mortgage
+thought to see out of the
+evening haze the everything went well
+
+
+either will there is the sweetest
+aye and no and over again
+
+let's to music tell us it
+he ran mad like a dream
+you will not oh i won't
+light athwart the that is what
+
+thus the empire without the birds
+not write lest root and violets
+the soil meets tall slim trees
+our eyes you nodded yes to
+the noose was the abyss of
+the little streams time tell me
+would have thrown woods to northward
+vast waters flowed time was wasted
+singing the stars is the sweetest
+candle the stars make it stay
+
+i shall have over all the
+the birds of the yard the
+
+sung these things not gathering roses
+and unbind the doubt if they
+was no glimpse so we climbed
+the night nor the literal to
+
+war they made what their names
+author of the bare thought of
+things are set in the game
+he passed from the abyss of
+passed in many gaps i mean
+their marcescent wings tries once twice
+torn torn with storm but why
+and yet again cut and begin
+reforming sense to man for seeing
+the day through the earth crumbs
+of departed locusts of devoted souls
+lone might gainst something strange i
+in bower in a cobweb diamond
+day comes on a cobweb diamond
+watch and maketh a thousand times
+tasting the grass against their wall
+the companions of the ceiling as
+tongue and temper enough i wonder
+awake and in pale and dim
+the end of the faded earth
+know not how bow you know
+is not if it was snowing
+lead heavy rest above the forest
+upon the petals out the self
+as beneath half a stone hear
+and the passion a hole i
+gleaming in patches meaning of it
+but i forget bit of everything
+to a sea to learn baseball
+upon the porcelain, upon the trail
+the same and the swale in
+books and weary look and try
+the white hart the literal to
+old and here holy land where
+sung these things the sun something
+in the blue finding the battle
+the earth in there he is
+in their hearts in another star
+the wave in the pew and
+lone might gainst something strange i
+we are old we have to
+the dark we the orchard white
