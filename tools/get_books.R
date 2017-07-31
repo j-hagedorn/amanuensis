@@ -57,14 +57,84 @@ keats <-
   # Remove header and footer matter
   slice(21:6253) %>%
   # Remove commentary
-  slice(c(1:2104,2715:6233)) 
+  slice(c(1:2104,2715:6233)) %>%
+  # Label chapters
+  mutate(
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(alt_text,regex("^[[:upper:]]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
 
 #### Frost Poems
 
 frost <- 
-  gutenberg_download(c(3021, 3026, 29345),meta_fields = c("title","author"),strip = T)
+  gutenberg_download(c(3021, 3026, 29345),meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(c(84:1046,1061:1070,1095:3258,3341:5228)) %>%
+  # Label chapters
+  mutate(
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(alt_text,regex("^[[:upper:]]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
 
-##### Donne Poems
+##### Pound
+
+pound <- 
+  gutenberg_download(c(23538,40200,41162,51992),meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(c(20:641,679:682,735:1782,1947:3707,3862:6274)) %>%
+  # Label chapters
+  mutate(
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(alt_text,regex("^[[:upper:]]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
+
+##### Emily Dickinson
+
+emily <- 
+  gutenberg_download(12242,meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(157:10304) %>%
+  # Label chapters
+  mutate(
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(alt_text,regex("^[[:upper:]]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
+
+
+#### COMBINE INTO CORPUS ####
+
+# Bind together
+# Must have colnames: "gutenberg_id","text","title","author","section","line"
+
+corpus <-
+  paradiselost %>%
+  bind_rows(leaves) %>%
+  bind_rows(emily) %>%
+  bind_rows(keats) %>%
+  bind_rows(frost) %>%
+  bind_rows(pound) %>%
+  bind_rows(moby) 
+
+# Write to file to save
+library(feather)
+write_feather(corpus,"corpus.feather")
+
+# Remove individual df to clean workspace
+rm(paradiselost);rm(leaves);rm(emily)
+rm(keats);rm(frost);rm(pound);rm(moby)
+
+
+#### NOT YET READ IN ####
+
+# Donne Poems
 
 donne <- gutenberg_download(c(48688, 48772))
 
@@ -72,18 +142,6 @@ tst <-
   donne %>%
   filter(grepl("_",text) == F) %>% 
   slice(c(1046:1068))
-
-##### Pound
-
-pound <- gutenberg_download(c(23538,40200,41162,51992))
-
-##### Emily Dickinson
-
-emily <- 
-  gutenberg_download(12242) %>%
-  # Remove header and footer matter
-  slice(157:10304) %>%
-  unnest_tokens(word, text) 
 
 ##### Common Minerals and Rocks
 
@@ -93,21 +151,7 @@ rocks <- gutenberg_download(49271)
 
 wildflowers <- gutenberg_download(45676)
 
-# Read in lexicon
-words1 <- read.delim("../english-words/words.txt",  sep = "", col.names = "word")
-words2 <- read.delim("../english-words/words2.txt", sep = "", col.names = "word")
-words3 <- read.delim("../english-words/words3.txt", sep = "", col.names = "word")
-words <- rbind(words1,words2,words3)
-rm(words1);rm(words2);rm(words3)
-words %<>% distinct()
 
-tst <- unique(
-  c(
-  words$word,
-  emily$word,
-  keats$word
-  )
-)
 
 # Making A Rock Garden 24496
 # Wild Flowers Worth Knowing 8866
