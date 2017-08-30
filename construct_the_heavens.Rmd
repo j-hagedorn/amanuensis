@@ -49,13 +49,34 @@ construct_nebulae <-
 
 construct_heaven %<>%
   bind_rows(construct_sun) %>%
-  bind_rows(construct_nebulae)
+  bind_rows(construct_nebulae) %>%
+  mutate(
+    text = str_trim(text),
+    # Replace numbers and spaces with ""
+    text = str_replace(text,"^[\\d\\s]+$",""),
+    text = str_replace_all(text,"[[:punct:]]|Â|^|>","")
+  ) %>%
+  filter(text != "") %>%
+  filter(nchar(text) > 10)
 
 rm(construct_sun); rm(construct_nebulae)
 
 ```
 
-#### Find
+from *[the Endeavor Journals of Joseph Banks](http://www2.sl.nsw.gov.au/banks/series_03/03_view.cfm)*
+
+```{r endeavor, message=FALSE, warning=FALSE, include=FALSE}
+
+temp <- tempfile()
+download.file("http://www2.sl.nsw.gov.au/banks/download/endevtxt.zip",temp)
+endeavor <- readLines(unz(temp, "Endeav.txt"))
+unlink(temp)
+endeavor %<>% as.data.frame()
+
+```
+
+
+#### Find patterns
 
 ```{r}
 
