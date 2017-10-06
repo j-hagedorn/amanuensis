@@ -1,5 +1,5 @@
 ---
-title: "Notebook"
+title: "Directions"
 output: html_notebook
 ---
 
@@ -80,14 +80,168 @@ endeavor %<>% as.data.frame()
 
 ```{r}
 
+make_verbs <- c("construct","make","measure","align","destroy","move","rest",
+                "build","add","support","bring","develop","extend","form",
+                "render","trace","draw")
+
+unnest_heavens <- 
+  construct_heaven %>%
+  unnest_tokens(words,text,"ngrams",n = 5) %>%
+  mutate(
+    prep = grepl(
+      pattern = paste0("^",paste(prepositions$word, collapse = " |^")), words
+    ),
+    make = grepl(
+      pattern = paste0("^",paste(make_verbs, collapse = " |^")), words
+    )
+  ) %>%
+  filter(prep == T | make == T)
+
+
 ```
 
+given to it i see
+by some agitation or other in a row a beautiful
+
+of the landscape are situated
+of the shining fluid added
+by the sun upon bodies
+on the surface of
+of the sun we shall
+
+of explaining it by mountains, by admitting large mountains
 
 
+from the limb was the
+of the shelving side instead
+to the edge of the
+below the surface of the
+of which we rarely see
+
+on the moon the unenlightened
+
+on the sun to which I have joined
+to be divided into two
 
 
+in the edipse of the
+from analogy 
+for the illumination which remains
 
+of these appearances i carefully
+as i approached the milky
+by a volcanic explosion violently
+on its return would gradually
+in diameter which is equal
+up the vacancy and thus
 
+from them when all the
 
+as far from us 
+as far as we can
 
+as vivid the diameters
+after all we can hardly
+into a pretty narrow compass
+in this paper 
 
+with regard to the physical
+with materials for examining
+in possession of a list
+to no more than what
+than what is sufficiently evident
+of light and luminous vapours
+of such fluids as I decompose
+
+on our earth the heat
+as could poffibly be crowded
+to exprefs in the fhorteft
+as its satellite we pafs
+as one full grown plant
+of plants or animals in
+for the purposes of animal
+
+on I need not fear
+
+from the generation of clouds
+of a crookedly branching nebula
+next section with one in
+without attempting to draw
+
+in the suit drawn pretty
+of ftars that would point
+as difficultly refolvable or colourlefs
+over with whitish and unequally
+
+within a fphere drawn round
+to render this point
+of instruction our clouds are
+about his little globe that
+about the dark part
+against the moons being
+around him the whole univerfe
+as a cone
+in this grand chemical as may be urged
+under the shape of dark
+under which we have
+
+as pretty closely scattered fmall
+as the minute parts of
+as i can think of 
+as nature never exposes
+as i have found
+for the dark ground
+
+from a point not lefs
+
+to difcover the places where
+near the margin that the
+near to an extinction of
+above the rough surface
+above conftruion as the fquare
+upon the ground the birds
+out of a thoufand fttuations
+
+throughout the whole the laws
+of the unevenness of the
+
+to be perceived without the
+to the naked about
+
+on an ifland unlefs we
+for instance which my sister
+to be opaque masses
+like the shrivelled elevations upon
+
+about a center or about all the spots
+about 2 minutes about 48 extent about 30 or 40 degrees about 60 or 70 generally about 27 long and in
+
+trace the operations 
+form this again we reft
+form confining 
+render this point
+draw additional
+draw upon myfelf 
+add that the idea of
+extend the weight of my
+form what has been faid
+make fome ufe of this
+extend equally to them all
+form the letter s 
+form a crofs
+build worlds of our own
+add obfervation to obfervation 
+make this appear 
+make a detached link
+form an opening in the
+trace the caufe 
+make it almoft improbable
+add the place
+bring some of thã¢ solar
+rest about all the spots
+bring on a subdivision
+support the ideas
+support these stars
+bring down the lustre of
+make them mere useless brilhant
+form the unevenness arising 
