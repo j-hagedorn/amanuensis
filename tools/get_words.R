@@ -1,6 +1,6 @@
 # get_words.R
 
-library(tidytext); library(magrittr)
+library(tidyverse);library(stringr);library(tidytext); library(magrittr)
 
 # Read in lexicon
 words1 <- read.delim("../english-words/words.txt",  sep = "", col.names = "word")
