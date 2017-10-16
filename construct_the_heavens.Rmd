@@ -82,7 +82,7 @@ endeavor %<>% as.data.frame()
 
 make_verbs <- c("construct","make","measure","align","destroy","move","rest",
                 "build","add","support","bring","develop","extend","form",
-                "render","trace","draw")
+                "render","trace","draw","place")
 
 unnest_heavens <- 
   construct_heaven %>%
@@ -100,7 +100,7 @@ unnest_heavens <-
 
 ```
 
-make fome ufe of this
+Make some use of this:
 
 in this grand chemical, under the shape of dark
 trace the operations
@@ -109,24 +109,29 @@ given to it I see
 by some agitation or other in a row a beautiful
 
 
-of the shining fluid added by the sun upon bodies
-on the sun to which I have joined
+of the shining fluid 
+added by the sun upon 
+bodies to which I have joined
 to be divided into two
 
-form what has been faid
-from analogy for the illumination which remains
+Form what has been said from 
+analogy for the illumination 
+which remains
 
 in this paper of light and luminous vapours
 of these appearances i carefully
 
 build worlds of our own
-as far as we can... as far from us 
+as far as we can (as far from us)
 
 of explaining it by mountains, by admitting large mountains
 
 form confining around him the whole univerfe
 
 Add the place.  Make it almost improbable.
+
+Place *now* and *then*.
+Place *I can only give* on *I need not fear*.
 
 ####
 
@@ -162,8 +167,14 @@ with materials for examining
 in possession of a list
 to no more than what
 than what is sufficiently evident
+as the minute parts 
+as i can think  
+as nature never exposes
+as i have found
+as I decompose
 
-of such fluids as I decompose
+
+of such fluids 
 
 on our earth the heat
 as could poffibly be crowded
@@ -173,7 +184,7 @@ as one full grown plant
 of plants or animals in
 for the purposes of animal
 
-on I need not fear
+
 
 from the generation of clouds
 of a crookedly branching nebula
@@ -198,10 +209,9 @@ under which we have
 
 as pretty closely scattered fmall
 
-as the minute parts 
-as i can think  
-as nature never exposes
-as i have found
+
+
+make them mere useless brilliant
 
 for the dark ground
 about the dark part
@@ -213,20 +223,19 @@ from a point not lefs
 to difcover the places where
 near the margin that the
 near to an extinction of
+
 above the rough surface
 above conftruion as the fquare
-upon the ground the birds
+upon the ground the birds form 
+the unevenness arising 
 out of a thousand situations
 
 throughout the whole the laws
 of the unevenness of the
 
 to be perceived without the
-
-
 make a detached link on an ifland unlefs we
 form an opening to the naked about
-
 
 for instance which my sister
 to be opaque masses
@@ -235,8 +244,8 @@ like the shrivelled elevations upon
 about a center or about all the spots
 about 2 minutes about 48 extent about 30 or 40 degrees about 60 or 70 generally about 27 long and in
 
- 
 form this again we reft
+
 render this point
 draw additional
 draw upon myfelf 
@@ -244,19 +253,20 @@ add that the idea of
 extend the weight of my
 
 extend equally to them all
+add obfervation to obfervation 
+
 form the letter s 
 form a crofs
 
-add obfervation to obfervation 
+
 make this appear 
 trace the caufe 
 
 
-bring some of thã¢ solar
+bring some of that
 rest about all the spots
 bring on a subdivision
 support the ideas
 support these stars
 bring down the lustre of
-make them mere useless brilhant
-form the unevenness arising 
+
