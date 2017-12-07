@@ -82,7 +82,7 @@ endeavor %<>% as.data.frame()
 
 make_verbs <- c("construct","make","measure","align","destroy","move","rest",
                 "build","add","support","bring","develop","extend","form",
-                "render","trace","draw","place")
+                "render","trace","draw","place","sew","stitch")
 
 unnest_heavens <- 
   construct_heaven %>%
@@ -100,38 +100,71 @@ unnest_heavens <-
 
 ```
 
-Make some use of this:
-
-in this grand chemical, under the shape of dark
+Make some use of this.
+In this grand chemical, under the shape of dark
 trace the operations
 
-given to it I see
-by some agitation or other in a row a beautiful
+of the shining fluid added by the sun upon 
+bodies  to which I have 
+joined to be divided into two.
 
+(Draw upon myself without 
+attempting to draw to be perceived)
 
-of the shining fluid 
-added by the sun upon 
-bodies to which I have joined
-to be divided into two
+Form what has been said 
+from analogy for the illumination 
+which remains in this paper 
+of light and luminous vapours,
+of these appearances I carefully
 
-Form what has been said from 
-analogy for the illumination 
-which remains
+  build worlds of our own
+  as far as we can (*as far from us*)
 
-in this paper of light and luminous vapours
-of these appearances i carefully
+above the rough surface as 
+the square upon 
+the ground the birds form 
+the unevenness arising 
+  out of a thousand situations - 
 
-build worlds of our own
-as far as we can (as far from us)
-
-of explaining it by mountains, by admitting large mountains
-
-form confining around him the whole univerfe
+In possession of a list
+no more than what is sufficiently evident
+as the minute parts 
+as I can think
+    *of explaining it by mountains, by admitting large mountains*
+as I have found.
 
 Add the place.  Make it almost improbable.
-
 Place *now* and *then*.
 Place *I can only give* on *I need not fear*.
+
+Form, confining around 
+him, the whole universe
+as vivid the diameters - to discover 
+the places where near the margin, we
+form an opening to the naked about
+
+As I decompose in the suit drawn pretty of stars
+
+Given to it I see by some agitation 
+or other in a row a beautiful
+                      
+after all we can hardly
+into a pretty narrow compass.
+
+
+
+
+
+
+
+
+Make them mere 
+useless 
+brilliant     for the dark ground
+about the dark part
+against the moon's being
+
+as its satellite we pafs
 
 ####
 
@@ -146,7 +179,6 @@ below the surface of the
 of which we rarely see
 
 on the moon the unenlightened
-
 in the edipse of the
 
 as i approached the milky
@@ -158,88 +190,52 @@ up the vacancy and thus
 
 from them when all the
 
-as vivid the diameters
-after all we can hardly
-into a pretty narrow compass
-
 with regard to the physical
 with materials for examining
-in possession of a list
-to no more than what
-than what is sufficiently evident
-as the minute parts 
-as i can think  
-as nature never exposes
-as i have found
-as I decompose
 
+as nature never exposes
+as one full grown plant
+as could possibly be crowded
+to express in the shortest
 
 of such fluids 
 
 on our earth the heat
-as could poffibly be crowded
-to exprefs in the fhorteft
-as its satellite we pafs
-as one full grown plant
-of plants or animals in
-for the purposes of animal
 
+near to an extinction of
+of plants or animals in
 
 
 from the generation of clouds
 of a crookedly branching nebula
 next section with one in
-without attempting to draw
 
-in the suit drawn pretty
-of ftars that would point
+that would point
 as difficultly refolvable or colourlefs
 
 over with whitish and unequally
+for the purposes of animal
+
+as a cone
+under which we have
+
+as pretty closely scattered fmall
+from a point not lefs
 
 within a fphere drawn round
 to render this point
 of instruction our clouds are
 about his little globe that
 
-
-as a cone
-
-under which we have
-
-as pretty closely scattered fmall
-
-
-
-make them mere useless brilliant
-
-for the dark ground
-about the dark part
-against the moons being
-
-
-from a point not lefs
-
-to difcover the places where
-near the margin that the
-near to an extinction of
-
-above the rough surface
-above conftruion as the fquare
-upon the ground the birds form 
-the unevenness arising 
-out of a thousand situations
+above conftruion 
 
 throughout the whole the laws
 of the unevenness of the
 
-to be perceived without the
-make a detached link on an ifland unlefs we
-form an opening to the naked about
+ without the
+make a detached link on an ifland unlefs 
 
 for instance which my sister
-to be opaque masses
-like the shrivelled elevations upon
 
 about a center or about all the spots
 about 2 minutes about 48 extent about 30 or 40 degrees about 60 or 70 generally about 27 long and in
@@ -248,7 +244,7 @@ form this again we reft
 
 render this point
 draw additional
-draw upon myfelf 
+
 add that the idea of
 extend the weight of my
 
@@ -256,17 +252,15 @@ extend equally to them all
 add obfervation to obfervation 
 
 form the letter s 
-form a crofs
-
+form a cross
 
 make this appear 
 trace the caufe 
 
-
 bring some of that
 rest about all the spots
-bring on a subdivision
+bring on a subdivision like the shrivelled elevations upon
 support the ideas
 support these stars
-bring down the lustre of
+bring down the lustre to be opaque masses
 
