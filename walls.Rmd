@@ -1,0 +1,111 @@
+---
+title: "Walls"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse); library(tidytext); library(gutenbergr)
+```
+
+Get 
+
+```{r}
+
+ancient_town <-
+  gutenberg_download(14189, meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(250:3823) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+ancient_city_1 <-
+  gutenberg_download(40860, meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(170:14960) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+ancient_city_2 <-
+  gutenberg_download(44449, meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(134:16680) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+ancient_walls <- bind_rows(ancient_town,ancient_city_1,ancient_city_2)
+
+find <- c("wall","boundar","door","entrance","border","enclos","divid",
+          "barrier","partition")
+
+unnest_walls <- 
+  ancient_walls %>%
+  unnest_tokens(words,text,"ngrams",n = 10) %>%
+  mutate(
+    matches = grepl(
+      pattern = paste0("^",paste(find, collapse = " |^")), words
+    )
+  ) %>%
+  filter(matches == T)
+
+```
+
+Get recent news articles using the word *wall* from the NYT and The Guardian.
+
+```{r nyt_query}
+library(rtimes)
+# Sys.setenv(NYTIMES_AS_KEY = "d62e45fd0479489faa7cb595e801aa08")
+x <- as_search(
+  q = "wall",
+  begin_date = "20160101", 
+  end_date = "20171112",
+  all_results = T)
+
+tst <- x$data
+```
+
+```{r guardian_query}
+# Guardian API limits the date range of records, so use a loop to call multiple
+# consecutive months
+
+multi_guardian <- 
+  function(query,section,from,n_mos,key) {
+    library(GuardianR); library(lubridate); library(tidyverse)
+    results <- data.frame()
+    from <- ymd(from)
+    for (i in 1:n_mos) {
+      month_result <- 
+      get_guardian(
+        query,
+        section = section,
+        from.date = as.character(from),
+        to.date = as.character(ceiling_date(from, unit = "month")),
+        api.key = key
+      )
+      from <- from %m+% months(1)
+      results <- bind_rows(results,month_result)
+    }
+    return(results)
+  }
+
+modern_walls <-
+multi_guardian(
+  query = "wall",
+  section = "world",
+  from = "2016-01-01",
+  n_mos = 12,
+  key = "4fccf9a1-64e9-407b-ad42-29e28bc9d7ce"
+)
+
+# Remove html tags from text
+library(htmltools)
+tst <- modern_walls %>%
+  mutate(
+    # text = html_text(read_html(body)),
+    text = htmlEscape(body),
+    text = gsub("*\\>.*?\\<*", " ", text)
+  ) %>%
+  separate_rows(text, sep = ". ")
+
+
+```
+
