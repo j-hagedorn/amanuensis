@@ -1,13 +1,11 @@
 ---
-title: "Directions"
+title: "The Construction of the Heavens"
 output: html_notebook
 ---
 
 ```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse); library(magrittr); library(stringr); library(tidytext); library(stringdist)
 ```
-
-#### Get books
 
 from *[Philosophical transactions of the Royal Society](https://archive.org/details/philosophicaltransactions)* 
 
@@ -75,10 +73,7 @@ endeavor %<>% as.data.frame()
 
 ```
 
-
-#### Find patterns
-
-```{r}
+```{r find_patterns}
 
 make_verbs <- c("construct","make","measure","align","destroy","move","rest",
                 "build","add","support","bring","develop","extend","form",
@@ -120,7 +115,7 @@ of these appearances I carefully
   build worlds of our own
   as far as we can (*as far from us*)
 
-above the rough surface as 
+Above the rough surface as 
 the square upon 
 the ground the birds form 
 the unevenness arising 
@@ -129,6 +124,7 @@ the unevenness arising
 In possession of a list
 no more than what is sufficiently evident
 as the minute parts 
+
 as I can think
     *of explaining it by mountains, by admitting large mountains*
 as I have found.
@@ -140,127 +136,133 @@ Place *I can only give* on *I need not fear*.
 Form, confining around 
 him, the whole universe
 as vivid the diameters - to discover 
-the places where near the margin, we
-form an opening to the naked about
 
-As I decompose in the suit drawn pretty of stars
+the places where, near 
+the margin, we form 
+an opening to the naked about.
 
-Given to it I see by some agitation 
-or other in a row a beautiful
-                      
-after all we can hardly
-into a pretty narrow compass.
+Extend equally to them all as one 
+full grown plant of a crookedly branching 
+nebula that would point about 
+a center or about 
+                    all the spots
 
-
-
-
-
-
-
-
-Make them mere 
-useless 
-brilliant     for the dark ground
+make them mere useless 
+brilliant for the dark ground
 about the dark part
 against the moon's being
 
-as its satellite we pafs
+                        *as its satellite we pass*
 
-####
-
-of the landscape are situated
-on the surface of
-of the sun we shall
-
-from the limb was the
-of the shelving side instead
-to the edge of the
-below the surface of the
-of which we rarely see
-
-on the moon the unenlightened
-in the edipse of the
-
-as i approached the milky
-by a volcanic explosion violently
-on its return would gradually
-in diameter which is equal
-
-up the vacancy and thus
-
-from them when all the
-
-with regard to the physical
-with materials for examining
-
-as nature never exposes
-as one full grown plant
-as could possibly be crowded
-to express in the shortest
-
-of such fluids 
-
-on our earth the heat
-
-near to an extinction of
-of plants or animals in
+As I decompose in the suit drawn pretty of stars
+given to it I see 
+by some agitation or other in a row a beautiful
+                      
+as difficultly resolvable
+                          above construction 
 
 
-from the generation of clouds
-of a crookedly branching nebula
-next section with one in
 
-that would point
-as difficultly refolvable or colourlefs
 
-over with whitish and unequally
-for the purposes of animal
-
-as a cone
-under which we have
-
-as pretty closely scattered fmall
-from a point not lefs
-
-within a fphere drawn round
-to render this point
-of instruction our clouds are
-about his little globe that
-
-above conftruion 
-
-throughout the whole the laws
-of the unevenness of the
-
- without the
-make a detached link on an ifland unlefs 
-
-for instance which my sister
-
-about a center or about all the spots
-about 2 minutes about 48 extent about 30 or 40 degrees about 60 or 70 generally about 27 long and in
-
-form this again we reft
-
-render this point
-draw additional
-
-add that the idea of
-extend the weight of my
-
-extend equally to them all
-add obfervation to obfervation 
-
-form the letter s 
-form a cross
-
-make this appear 
-trace the caufe 
-
-bring some of that
-rest about all the spots
-bring on a subdivision like the shrivelled elevations upon
-support the ideas
-support these stars
-bring down the lustre to be opaque masses
-
+```{r leftovers}
+# after all we can hardly
+# into a pretty narrow compass.
+# 
+# rest about all the spots
+# 
+# of the landscape are situated
+# on the surface of
+# of the sun we shall
+# 
+# from the limb was the
+# of the shelving side instead
+# to the edge of the
+# below the surface of the
+# of which we rarely see
+# 
+# on the moon the unenlightened
+# in the edipse of the
+# 
+# as i approached the milky
+# by a volcanic explosion violently
+# on its return would gradually
+# in diameter which is equal
+# 
+# up the vacancy and thus
+# 
+# from them when all the
+# 
+# with regard to the physical
+# with materials for examining
+# 
+# as nature never exposes
+# 
+# as could possibly be crowded
+# to express in the shortest
+# 
+# of such fluids 
+# 
+# within a fphere drawn round
+# on our earth the heat
+# near to an extinction of
+# of plants or animals in
+# from the generation of clouds
+# 
+# 
+# 
+# next section with one in
+# 
+# 
+#  or colourlefs
+# 
+# over with whitish and unequally
+# for the purposes of animal
+# 
+# as a cone
+# under which we have
+# 
+# as pretty closely scattered fmall
+# from a point not lefs
+# 
+# 
+# to render this point
+# of instruction our clouds are
+# about his little globe that
+# 
+# 
+# 
+# throughout the whole the laws
+# of the unevenness of the
+# 
+#  without the
+# make a detached link on an ifland unlefs 
+# 
+# for instance which my sister
+# 
+# 
+# about 2 minutes about 48 extent about 30 or 40 degrees about 60 or 70 generally about 27 long and in
+# 
+# form this again we reft
+# 
+# render this point
+# draw additional
+# 
+# add that the idea of
+# extend the weight of my
+# 
+# 
+# add obfervation to obfervation 
+# 
+# form the letter s 
+# form a cross
+# 
+# make this appear 
+# trace the caufe 
+# 
+# bring some of that
+# 
+# bring on a subdivision like the shrivelled elevations upon
+# support the ideas
+# support these stars
+# bring down the lustre to be opaque masses
+```
