@@ -1,0 +1,32 @@
+---
+title: "Things"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse); library(magrittr); library(stringr); library(tidytext); library(stringdist);library(gutenbergr)
+```
+
+#### Get books
+
+from *[De Rerum Naturae](https://archive.org/details/philosophicaltransactions)* 
+
+```{r get_books, message=FALSE, warning=FALSE, include=FALSE}
+
+de_rerum <-
+  gutenberg_download(785, meta_fields = c("title","author"), strip = T) 
+
+tst <-
+de_rerum %>%
+  # Label books
+  mutate(section = cumsum(str_detect(text,regex("^BOOK",ignore_case = F)))) %>%
+  # Remove filler text between books
+  filter(text != "") %>%
+  filter(grepl("PROEM",text) == F) %>%
+  # Remove header and footer matter
+  slice(26:10980) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+```
+
