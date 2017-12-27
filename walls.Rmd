@@ -1,13 +1,13 @@
 ---
-title: "Walls"
+title: "On Walls"
 output: html_notebook
 ---
 
 ```{r}
-library(tidyverse); library(tidytext); library(gutenbergr)
+library(tidyverse); library(magrittr); library(stringr); library(tidytext); library(stringdist); library(gutenbergr)
 ```
 
-Get 
+Get sources on ancient cities:
 
 ```{r}
 
@@ -46,6 +46,113 @@ unnest_walls <-
     )
   ) %>%
   filter(matches == T)
+
+```
+
+Get Strabo's *"The Inhabited World"*
+
+```{r get_strabo}
+# The Inhabited World according to Strabo (vol 1) 
+strabo_1 <- 
+  readLines("https://archive.org/stream/in.gov.ignca.2913/2913_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(2476:24482) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 2) 
+strabo_2 <- 
+  readLines("https://archive.org/stream/in.gov.ignca.2914/2914_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(700:20952) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 3) 
+strabo_3 <- 
+  readLines("https://archive.org/stream/in.gov.ignca.2915/2915_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(719:18236) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 4) 
+strabo_4 <- 
+  readLines("https://archive.org/stream/in.ernet.dli.2015.57228/2015.57228.Geography-Of-Strabo-Vol-4_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(686:21746) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 5) 
+strabo_5 <- 
+  readLines("https://archive.org/stream/in.gov.ignca.2917/2917_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(680:24503) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 6) 
+strabo_6 <- 
+  readLines("https://archive.org/stream/in.ernet.dli.2015.57230/2015.57230.Geography-Of-Strabo-Vol-6_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(651:18006) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 7) 
+strabo_7 <- 
+  readLines("https://archive.org/stream/in.ernet.dli.2015.57231/2015.57231.Geography-Of-Strabo-Vol-7_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(677:17413) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+# The Inhabited World according to Strabo (vol 6) 
+strabo_8 <- 
+  readLines("https://archive.org/stream/in.ernet.dli.2015.57232/2015.57232.Geography-Of-Strabo-Vol-8_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(626:10453) %>%
+  mutate(
+    title = "The Inhabited World",
+    author = "Strabo"
+  )
+
+inhabited_world <-
+strabo_1 %>%
+  bind_rows(strabo_2,strabo_3,strabo_4,strabo_5,strabo_6,strabo_7,strabo_8) %>%
+  mutate(
+    text = str_trim(text),
+    # Replace numbers and spaces with ""
+    text = str_replace(text,"^[\\d\\s]+$",""),
+    text = str_replace_all(text,"[[:punct:]]|Â|^|>","")
+  ) %>%
+  filter(text != "" & text != "STRABO") 
+
+rm(strabo_1); rm(strabo_2); rm(strabo_3); rm(strabo_4)
+rm(strabo_5); rm(strabo_6); rm(strabo_7); rm(strabo_8)
 
 ```
 
@@ -109,3 +216,64 @@ tst <- modern_walls %>%
 
 ```
 
+Find patterns
+
+```{r}
+wall_words <- c("wall","walls","border","borders","boundary","boundaries",
+                "gate","gates","door","doors","divide","divides",
+                "security","secure","outside","inside","haven",
+                "harbor","harbour","key","keys","hinge","hinges")
+
+unnest_world <- 
+  inhabited_world %>%
+  unnest_tokens(words,text,"ngrams",n = 5) %>%
+  mutate(
+    make = grepl(
+      pattern = paste0("^",paste(wall_words, collapse = " |^")), words
+    )
+  ) %>%
+  filter(make == T)
+
+```
+
+
+* * * * * 
+
+A door is a way of holding in or out blessings or curses.
+
+On the inside of the wall is starvation.
+On the outside is exposure.
+A door modulates, a song of economy.
+
+The ratio of opening and closing is temperance.
+IC XC says: "I have put before you an open door, which no one is able to shut."
+The Liturgy says: "The doors, (close) the doors.  Let us attend."
+
+A mountaintop is a million entrances in all directions.
+One must scale the wall to arrive there each moment.
+
+Door :: 'porta', from 'portare', to bring, which has a sense of openness, of generosity,
+of shared worlds (though distinct, enriching one another)
+
+Walls with banners, slogans, announcing who we wish to be.
+Regulate, make space for peace within, if peace is uniformity.
+
+Have I run this far to build a wall of air around me?
+
+To rebuild the borders of my contested life?
+
+In the midst of the door is a ring.  Marry the path.
+
+cf. Harrison: at Athenian weddings, a boy carried a winnowing fan, saying:
+"Bad have I fled, better have I found."  A winnowing of paths.
+
+In some of the oldest extant cities, the buildings have no doors.
+Çatalhöyük, for example, had no public buildings but only dwellings - like caves laid horizontal,
+open to the sky instead of to the land.
+
+What a revolution the public square must have been, the piazza/plein.  A place where it was safe to be with others, enclosed but open.
+
+In America, we have reverted to doorless homes.  Our caves open only to the transmissions of waves.
+
+
+The Greek for 'initiation' τελέω :: 'fulfillment'
