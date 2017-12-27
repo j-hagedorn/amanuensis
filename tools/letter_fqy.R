@@ -1,8 +1,10 @@
 # letter_fqy.R
 
+# Source dependencies
+source("get_words.R"); source("read_RID.R")
+
 # Count concentration of similar letters 
 # Find all words with highest concentration of a letter
-
 
 letter_fqy <-
   words %>%
@@ -43,13 +45,27 @@ letter_fqy <-
   mutate_at(
     .vars = vars(a:consonant),
     .funs = funs(. / len)
+  ) %>%
+  mutate(
+    prep = word %in% as.list(prepositions$word)
   )
 
-tst <- 
+# Create groups based on similarity of letter frequency
+
+k_df <- 
   letter_fqy %>%
+  select(word, a:z) %>%
+  filter(complete.cases(.)) 
+
+k_groups <- 
+  k_df %>% 
   select(a:z) %>%
-  filter(complete.cases(.)) %>%
-  kmeans(centers = 1000)
+  kmeans(centers = 500)
+
+k_df$k_group <- k_groups$cluster
+
+k_df %<>% select(word,k_group)
+
+letter_fqy %<>% left_join(k_df, by = "word")
   
-# row.names(tst) <- tst$word
-# tst <- kmeans(letter_fqy, 10)
+rm(k_df); rm(k_groups)
