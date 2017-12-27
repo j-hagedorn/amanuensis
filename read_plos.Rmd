@@ -1,0 +1,38 @@
+---
+title: "Read PLOS"
+output: html_notebook
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = F, warning = F)
+library(tidyverse); library(tidytext); library(stringr)
+library(stringdist); library(fulltext); library(rplos)
+```
+
+
+```{r}
+term <- "membrane"
+ft_search(query = term, from = 'plos')
+```
+
+
+```{r}
+
+x <- 
+  ft_get(
+    searchplos(
+      q = term, fl = 'id',
+      fq = list(
+        'doc_type:full',
+        "article_type:\"research article\""
+      ), 
+      limit = 10
+    )$data$id, 
+    from = "plos"
+  ) %>% 
+  chunks(what = c("title","body")) %>% 
+  tabularize() %>%
+  .$plos
+
+```
+
