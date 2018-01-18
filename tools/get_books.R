@@ -7,7 +7,7 @@ library(tidyverse); library(magrittr)
 library(gutenbergr); library(tidytext); library(stringr)
 
 gutenberg_works() %>% 
-  #left_join(gutenberg_subjects) %>%
+  left_join(gutenberg_subjects) %>%
   #filter(str_detect(author, 'Wells')) %>%
   #filter(str_detect(title, 'physics')) %>%
   #filter(str_detect(subject, 'science')) %>%
@@ -114,6 +114,23 @@ grimm <-
   gutenberg_download(2591, meta_fields = c("title","author"), strip = T) %>%
   # Remove header and footer matter
   slice(94:9150) %>%
+  # Label chapters
+  mutate(
+    text = str_trim(text, side = "both"),
+    author = "Brothers Grimm",
+    # Start numbering a new chapter if line is all CAPS
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(text,regex("^[A-Z \\d\\W]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
+
+#### Mother Goose #####
+
+goose <-
+  gutenberg_download(17208, meta_fields = c("title","author"), strip = T) %>%
+  # Remove header and footer matter
+  slice(140:2005) %>%
   # Label chapters
   mutate(
     text = str_trim(text, side = "both"),
