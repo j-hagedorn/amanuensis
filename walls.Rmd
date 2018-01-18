@@ -51,7 +51,7 @@ unnest_walls <-
 
 Get Strabo's *"The Inhabited World"*
 
-```{r get_strabo}
+```{r get_strabo, include=FALSE}
 # The Inhabited World according to Strabo (vol 1) 
 strabo_1 <- 
   readLines("https://archive.org/stream/in.gov.ignca.2913/2913_djvu.txt",skipNul = T) %>% 

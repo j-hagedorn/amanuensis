@@ -66,7 +66,7 @@ keats <-
   ) %>%
   select(-alt_text)
 
-#### Frost Poems
+##### Frost Poems ####
 
 frost <- 
   gutenberg_download(c(3021, 3026, 29345),meta_fields = c("title","author"),strip = T) %>%
@@ -80,7 +80,7 @@ frost <-
   ) %>%
   select(-alt_text)
 
-##### Pound
+##### Pound ####
 
 pound <- 
   gutenberg_download(c(23538,40200,41162,51992),meta_fields = c("title","author"),strip = T) %>%
@@ -94,7 +94,7 @@ pound <-
   ) %>%
   select(-alt_text)
 
-##### Emily Dickinson
+##### Emily Dickinson ####
 
 emily <- 
   gutenberg_download(12242,meta_fields = c("title","author"),strip = T) %>%
@@ -108,6 +108,21 @@ emily <-
   ) %>%
   select(-alt_text)
 
+##### Grimm Brothers ####
+
+grimm <-
+  gutenberg_download(2591, meta_fields = c("title","author"), strip = T) %>%
+  # Remove header and footer matter
+  slice(94:9150) %>%
+  # Label chapters
+  mutate(
+    text = str_trim(text, side = "both"),
+    # Start numbering a new chapter if line is all CAPS
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(text,regex("^[A-Z \\d\\W]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
 
 #### COMBINE INTO CORPUS ####
 
@@ -121,15 +136,16 @@ corpus <-
   bind_rows(keats) %>%
   bind_rows(frost) %>%
   bind_rows(pound) %>%
-  bind_rows(moby) 
+  bind_rows(moby) %>%
+  bind_rows(grimm)
 
 # Write to file to save
-library(feather)
-write_feather(corpus,"corpus.feather")
+feather::write_feather(corpus,"corpus.feather")
 
 # Remove individual df to clean workspace
 rm(paradiselost);rm(leaves);rm(emily)
 rm(keats);rm(frost);rm(pound);rm(moby)
+rm(grimm)
 
 
 #### NOT YET READ IN ####
@@ -145,7 +161,26 @@ tst <-
 
 ##### Common Minerals and Rocks
 
-rocks <- gutenberg_download(49271)
+# Principles of Geology, by Charles Lyell 
+# Theory of the Earth, Volume 1 (of 4), by James Hutton 
+# The Student's Elements of Geology by Lyell 
+# Making A Rock Garden 
+
+rocks <- 
+  gutenberg_download(
+    c(49271,33224,12861,3772,24496),
+    meta_fields = c("title","author"),
+    strip = T
+  ) %>%
+  # Remove header and footer matter
+  slice(c(5288:23238,27411:38871,38987:39693,39760:39838,33224:82169,86448:91722)) %>%
+  # Label chapters
+  mutate(
+    alt_text = gsub("[[:punct:]]|[[:space:]]|[0-9]","",str_trim(text)),
+    section = cumsum(str_detect(alt_text,regex("^[[:upper:]]+$",ignore_case = F))),
+    line = row_number()
+  ) %>%
+  select(-alt_text)
 
 ##### Wild Flowers East of the Rockies
 
@@ -153,11 +188,8 @@ wildflowers <- gutenberg_download(45676)
 
 
 
-# Making A Rock Garden 24496
+
 # Wild Flowers Worth Knowing 8866
-# Principles of Geology, by Charles Lyell 33224
-# Theory of the Earth, Volume 1 (of 4), by James Hutton 12861
-# The Student's Elements of Geology by Lyell 3772
 # Five of Maxwell's Papers 4908
 # MONISM AS CONNECTING RELIGION AND SCIENCE Haeckel 9199
 # The Temple of Nature; or, the Origin of Society Darwin, Erasmus 26861
@@ -169,8 +201,6 @@ wildflowers <- gutenberg_download(45676)
 # metamorphosis: 5200
 # jekyll: 43
 # pope_iliad: 6130
-# pound_personae: 41162
-# emily: 12242
 # ulysses: 4300
 
 

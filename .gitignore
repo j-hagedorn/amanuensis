@@ -111,7 +111,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .Rproj.user
-
+*.perm
 
 # Ignored R files
 
@@ -121,7 +121,7 @@ Temporary Items
 
 # Session Data files
 .RData
-
+*.RDataTmp
 # Example code in package build process
 *-Ex.R
 

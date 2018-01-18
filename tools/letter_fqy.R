@@ -1,15 +1,54 @@
 # letter_fqy.R
 
+# Load libraries
+library(tidyverse); library(tidytext); library(fuzzyjoin)
+
 # Source dependencies
 source("get_words.R"); source("read_RID.R")
 
-# Count concentration of similar letters 
-# Find all words with highest concentration of a letter
+# Create function to count unique chars in string
+library(inline)
+
+.char_unique_code <- "
+  std::vector < std::string > s = as< std::vector < std::string > >(x);
+  unsigned int input_size = s.size();
+  
+  std::vector < std::string > chrs(input_size);
+  
+  for (unsigned int i=0; i<input_size; i++) {
+  
+  std::string t = s[i];
+  
+  for (std::string::iterator chr=t.begin();
+  chr != t.end(); ++chr) {
+  
+  if (chrs[i].find(*chr) == std::string::npos) {
+  chrs[i] += *chr;
+  }
+  
+  }
+  
+  }
+  return(wrap(chrs));
+"
+
+char_unique <- 
+  rcpp(
+    sig = signature(x = "std::vector < std::string >"),
+    body = .char_unique_code,
+    includes = c("#include <string>","#include <iostream>")
+  )
+
+char_ct_unique <- function(x) nchar(char_unique(x))
+
+
+
 
 letter_fqy <-
   words %>%
   mutate(
     len = nchar(as.character(word)),
+    # Count concentration of letters 
     a = str_count(word,"a"),
     b = str_count(word,"b"),
     c = str_count(word,"c"),
@@ -38,17 +77,26 @@ letter_fqy <-
     z = str_count(word,"z"),
     vowel = str_count(word,"[aeiouy]"),
     consonant = str_count(word,"[bcdfghjklmnpqrstvwxz]"),
+    # Count n of distinct letters in word
+    distinct_letters = char_ct_unique(as.character(word)),
     # Find words with double letters in middle of word (e.g. dd pp ll)
-    double = str_detect(word,".(aa|bb|cc|dd|ee|ff|gg|hh|ii|jj|kk|ll|mm|nn|oo|pp|qq|rr|ss|tt|uu|vv|ww|xx|yy|zz)."),
-    proper = str_detect(word,"\\b([A-Z]\\w*)\\b")
+    double = str_detect(
+      word,
+      ".(aa|bb|cc|dd|ee|ff|gg|hh|ii|jj|kk|ll|mm|nn|oo|pp|qq|rr|ss|tt|uu|vv|ww|xx|yy|zz)."
+    ),
+    proper = str_detect(word,"\\b([A-Z]\\w*)\\b"),
+    gerund = str_detect(word, "ing$"),
+    punct = str_detect(word, "[[:punct:]]"),
+    number = str_detect(word, "[0-9]"),
+    prep = word %in% as.list(prepositions$word),
+    first_letter = str_sub(word, start = 1, end = 1),
+    last_letter = str_sub(word, start = -1, end = -1)
   ) %>%
   mutate_at(
-    .vars = vars(a:consonant),
+    .vars = vars(a:distinct_letters),
     .funs = funs(. / len)
-  ) %>%
-  mutate(
-    prep = word %in% as.list(prepositions$word)
-  )
+  ) 
+
 
 # Create groups based on similarity of letter frequency
 
@@ -63,9 +111,17 @@ k_groups <-
   kmeans(centers = 500)
 
 k_df$k_group <- k_groups$cluster
-
 k_df %<>% select(word,k_group)
 
 letter_fqy %<>% left_join(k_df, by = "word")
   
 rm(k_df); rm(k_groups)
+
+
+# Working lexicon
+
+lexicon <-
+  letter_fqy %>%
+  # filter out unnecessary words
+  filter(punct == F & number == F & proper == F) %>%
+  select(-punct,-number,-proper)
