@@ -1,0 +1,53 @@
+---
+title: "Sestina, Matera"
+output: html_notebook
+---
+
+For days compiled from decades, seconds stacked
+with centuries, we pile aspiring stones
+for walls, press into clay with marks
+of shellwhorl and beast-teeth. Sculpt the round
+insides of bowls, of days, with turn and touch, lost
+strewn across a thousand noons, baked by the air.
+
+Previous inhabitants carved lungfulls of air
+from cliffs; conjured shapes from their hunger, stacked
+homes along that precipice.  Their mastery is lost
+with their mistakes.   ...stone
+ ...round
+ ...marks
+
+ ...marks
+ ...air
+ ...round
+ ...stacked
+ ...stone
+ ...lost
+ 
+ ...lost
+ ...marks
+ ...stone
+ ...air
+ ...stacked
+ ...round
+
+ ...round
+ ...lost
+ ...stacked
+ ...marks
+ ...air
+ ...stone
+
+ ...stone
+ ...round
+ ...air
+ ...lost
+ ...marks
+ ...stacked
+
+ ...stacked ...stones
+ ...marks ...round
+ ...lost ...air
+
+
+ 
