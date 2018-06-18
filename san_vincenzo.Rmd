@@ -1,0 +1,263 @@
+---
+title: "Lost Library of San Vincenzo"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse); library(magrittr); library(stringr); library(tidytext)
+library(stringdist); library(gutenbergr)
+```
+
+Scrape and gather the books which are most likely to have been kept at St. Vincenzo Abbey prior to the Saracen attack of 881.  The texts include:
+
+- *The Vulgate* (using 1610 A.D. Douay Old Testament, 1582 A.D. Rheims New Testament for closest English translation)
+- St. Augustine, *De Civitate Dei*
+- Boethius, *The Consolation Of Philosophy*
+- St. Basil
+- Pseudo-Dionysius
+- St. Jerome
+
+```{r vulgate, message=FALSE, warning=FALSE, include=FALSE}
+
+vulgate <- 
+  gutenberg_download(1581,meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(234:146171) %>%
+  mutate(
+    title = "Vulgate",
+    author = "St. Jerome"
+  ) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+```
+
+```{r boethius, message=FALSE, warning=FALSE, include=FALSE}
+boethius <- 
+  readLines("https://ia802708.us.archive.org/32/items/consolationofphi029292mbp/consolationofphi029292mbp_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  # Remove header and footer matter
+  slice(62:5313) %>%
+  mutate(
+    gutenberg_id = NA,
+    title = "The Consolation Of Philosophy",
+    author = "Boethius"
+  ) %>%
+  # Number lines for reference
+  mutate(line = row_number()) %>%
+  select(gutenberg_id,text,title,author,line)
+```
+
+```{r augustine, message=FALSE, warning=FALSE, include=FALSE}
+city_of_god <- 
+  gutenberg_download(c(45304,45305),meta_fields = c("title","author"),strip = T) %>%
+  # Remove header and footer matter
+  slice(c(579:22071,22580:43978)) %>%
+  # Label rows
+  mutate(line = row_number()) 
+```
+
+```{r basil, message=FALSE, warning=FALSE, include=FALSE}
+basil_1 <-
+  readLines("https://ia601601.us.archive.org/24/items/in.ernet.dli.2015.185476/2015.185476.Saint-Basil-The-Letters-In-Four-Volumes---I_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(5318:21779) %>%
+  mutate(
+    title = "Letters",
+    author = "St. Basil"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+basil_2 <-
+  readLines("https://ia801608.us.archive.org/6/items/in.ernet.dli.2015.183483/2015.183483.The-Loeb-Classical-Library--Saint-Basil-The-Letters_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(607:21759) %>%
+  mutate(
+    title = "Letters",
+    author = "St. Basil"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+basil_4 <-
+  readLines("https://ia801606.us.archive.org/5/items/in.ernet.dli.2015.185475/2015.185475.Saint-Basil--Vol-iv-Th_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(1199:20359) %>%
+  mutate(
+    title = "Letters",
+    author = "St. Basil"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+basil <- 
+  basil_1 %>% 
+  bind_rows(basil_2,basil_4) %>%
+  mutate(gutenberg_id = NA) %>%
+  select(gutenberg_id,text,title,author,line)
+
+rm(basil_1); rm(basil_2); rm(basil_4)
+```
+
+```{r pseudo_dionysius, message=FALSE, warning=FALSE, include=FALSE}
+pseudo_dionysius_1 <-
+  readLines("https://ia800305.us.archive.org/30/items/worksofdionysius00pseu/worksofdionysius00pseu_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(670:16739) %>%
+  mutate(
+    title = "Divine Names, Mystic Theology, Letters, etc.",
+    author = "Pseudo-Dionysius, the Areopagite"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+pseudo_dionysius_2 <-
+  readLines("https://ia800209.us.archive.org/7/items/worksofdionysius02pseu/worksofdionysius02pseu_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(775:7005) %>%
+  mutate(
+    title = "The Heavenly Hierarchy and the Ecclesiastical Hierarchy",
+    author = "Pseudo-Dionysius, the Areopagite"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+pseudo_dionysius <- 
+  pseudo_dionysius_1 %>% 
+  bind_rows(pseudo_dionysius_2) %>%
+  mutate(gutenberg_id = NA) %>%
+  select(gutenberg_id,text,title,author,line)
+
+rm(pseudo_dionysius_1); rm(pseudo_dionysius_2)
+```
+
+```{r jerome, message=FALSE, warning=FALSE, include=FALSE}
+jerome <-
+  readLines("https://ia801001.us.archive.org/3/items/L262St.JeromeSelectLetters/L262-St.%20Jerome%20Select%20Letters_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(663:21972) %>%
+  mutate(
+    gutenberg_id = NA,
+    title = "Letters",
+    author = "St. Jerome"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) %>%
+  select(gutenberg_id,text,title,author,line)
+```
+
+```{r chrysostom, message=FALSE, warning=FALSE, include=FALSE}
+
+chrysostom_jn_1 <-
+  readLines("https://ia800504.us.archive.org/6/items/thehomiliesofsj01chryuoft/thehomiliesofsj01chryuoft_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(778:18948) %>%
+  mutate(
+    title = "The Homilies on the Gospel of St. John",
+    author = "St. John Chrysostom"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+chrysostom_jn_2 <-
+  readLines("https://ia800500.us.archive.org/34/items/thehomiliesofsjo02johnuoft/thehomiliesofsjo02johnuoft_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(877:23486) %>%
+  mutate(
+    title = "The Homilies on the Gospel of St. John",
+    author = "St. John Chrysostom"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+chrysostom_priest <-
+  readLines("https://ia802706.us.archive.org/24/items/sjohnchrysostom00johngoog/sjohnchrysostom00johngoog_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(625:7989) %>%
+  mutate(
+    title = "On the Priesthood",
+    author = "St. John Chrysostom"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+chrysostom_romans <-
+  readLines("https://ia801407.us.archive.org/31/items/homiliessjohnch01morrgoog/homiliessjohnch01morrgoog_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  slice(868:28547) %>%
+  mutate(
+    title = "The Homilies on the Epistle to the Romans",
+    author = "St. John Chrysostom"
+  ) %>%
+  # Label rows
+  mutate(line = row_number()) 
+
+chrysostom <- 
+  chrysostom_jn_1 %>% 
+  bind_rows(
+    chrysostom_jn_2,
+    chrysostom_priest,
+    chrysostom_romans
+  ) %>%
+  mutate(gutenberg_id = NA) %>%
+  select(gutenberg_id,text,title,author,line)
+
+rm(chrysostom_jn_1);rm(chrysostom_jn_2)
+rm(chrysostom_priest);rm(chrysostom_romans)
+
+```
+
+```{r combine, message=FALSE, warning=FALSE, include=FALSE}
+san_vincenzo <-
+  vulgate %>%
+  bind_rows(
+    city_of_god,
+    chrysostom,
+    boethius,
+    basil,
+    jerome,
+    pseudo_dionysius
+  ) %>%
+  mutate(
+    text = str_trim(text),
+    text = str_replace_all(text,"[[:punct:]]|[/*^â€”]|[[:digit:]]","")
+  ) %>%
+  filter(text != "") %>%
+  filter(str_detect(text,"^Digitized by*") == F)
+  
+
+
+```
+
+
+```{r find_patterns}
+
+choice_verbs <- c("path","choice","choose","way","become","embrace","hold","run",
+                  "go","flee","return","planted","among","remove","belong",
+                  "transform")
+
+unnest_san_vincenzo <- 
+  san_vincenzo %>%
+  unnest_tokens(words,text,"ngrams",n = 10) %>%
+  mutate(
+    choose = grepl(
+      pattern = paste0("^",paste(choice_verbs, collapse = " |^")), 
+      words
+    )
+  ) %>%
+  filter(choose == T)
+
+
+```
