@@ -42,5 +42,24 @@ rid %<>%
     level_2 = v2,
     level_3 = v3,
     word = v4
+  ) %>%
+  mutate(
+    regex_word = str_replace(word,"[[:punct:]]",replacement = ""),
+    regex_word = paste0("^",regex_word)
   )
+
+###
+
+# Make a function to join wordlists to RID
+
+join_to_rid <- function(df){
+  
+  library(tidyverse); library(fuzzyjoin)
+  
+  rid %>% regex_join(df, by = c("regex_word" = "word"), mode = "inner", ignore_case = FALSE)
+  
+}
+
+
+
   
