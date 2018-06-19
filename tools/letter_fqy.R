@@ -42,8 +42,6 @@ char_unique <-
 char_ct_unique <- function(x) nchar(char_unique(x))
 
 
-
-
 letter_fqy <-
   words %>%
   mutate(
@@ -77,8 +75,28 @@ letter_fqy <-
     z = str_count(word,"z"),
     vowel = str_count(word,"[aeiouy]"),
     consonant = str_count(word,"[bcdfghjklmnpqrstvwxz]"),
+    # Identify types of sounds
+    sibilants = str_count(word,"s|sh|z|x"), 
+    fricatives = str_count(word,"f|v|s|sh|z|x"), 
+    plosives = str_count(word,"p|b"), 
+    dentals = str_count(word,"t|d|th"), 
+    nasals = str_count(word,"m|n|ng"), 
+    liquids = str_count(word,"l|r"), 
+    gutterals = str_count(word,"\\w*(?<!n)g|k"), # All 'g' not preceded by 'n'
+    # Label by place of articulation
+    bilabial = str_count(word,"p|b|m"),
+    labiodental = str_count(word,"f|v"), 
+    dental = str_count(word,"th"), 
+    alveolar = str_count(word,"t|d|l|n|s|z"), 
+    velar = str_count(word,"k|g|ng"),
+    glottal = str_count(word,"\\w*(?<!t)h"), # All 'h' not preceded by 't'
+    # Label by manner of articulation 
+    closure = str_count(word,"p|b|t|d|k|g|s|ng"), 
+    narrowing = str_count(word,"th|s|z"),
+    frictionless = str_count(word,"w|v|j"),
     # Count n of distinct letters in word
-    distinct_letters = char_ct_unique(as.character(word)),
+    distinct_letters = NA,
+    # distinct_letters = char_ct_unique(as.character(word)),
     # Find words with double letters in middle of word (e.g. dd pp ll)
     double = str_detect(
       word,
