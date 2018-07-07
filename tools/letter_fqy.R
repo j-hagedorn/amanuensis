@@ -143,3 +143,5 @@ lexicon <-
   # filter out unnecessary words
   filter(punct == F & number == F & proper == F) %>%
   select(-punct,-number,-proper)
+
+feather::write_feather(lexicon,"lexicon.feather")
