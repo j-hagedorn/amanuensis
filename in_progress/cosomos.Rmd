@@ -119,26 +119,52 @@ unnest_cosmos <-
   ) %>%
   ungroup() %>%
   select(title:word) %>%
+  filter(is.na(word) == F) %>%
+  mutate(
+    tag = str_detect(word,"\\*"),
+    running = cumsum(as.numeric(tag))
+  ) %>%
+  group_by(running) %>%
+  mutate(
+    word_n = row_number()
+  ) 
+
+lead_10 <- unnest_cosmos %>% top_n(-10,word_n) %>% filter(running != 0) 
+
+# Count of 11 includes tagged word
+lag_10 <-  unnest_cosmos %>% top_n(11,word_n) %>% ungroup() %>% filter(running != max(running))
+
+cosmos_vowel_lines <- 
+  lead_10 %>% 
+  bind_rows(lag_10) %>%
+  ungroup() %>%
+  arrange(running,word_n) %>%
+  mutate(group = rep(1:21, length.out = nrow(.))) %>%
+  mutate(
+    tag = group == 1,
+    running = cumsum(as.numeric(tag))
+  ) %>%
+  group_by(title,author,volume,running) %>%
   # Reassemble unnested data into lines
   nest(word) %>%
   mutate(
     text = map(data, unlist), 
     text = map_chr(text, paste, collapse = " ")
   ) %>%
-  select(title:line,text) %>%
-  # Include only lines with tagged (*) words
-  filter(str_detect(text,"\\*"))
+  select(title:volume,text) 
+
+rm(lead_10);rm(lag_10);rm(unnest_cosmos)
 
 ```
 
 Need to:
 
-- get tagged words in the middle of a 20-word n-gram
 - determine additional criteria for filtering (related to content/topic)
 
 ```{r subset_lines}
 
-
+cosmos_vowel_lines$text
+  
   
 ```
 
