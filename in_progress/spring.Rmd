@@ -5,7 +5,7 @@ output: html_notebook
 ---
 
 *...and morning came and showed Snow the prism hidden in his sharded heart.*  
-*And Snow thought to himself: "How can one become light without embodying each color?"*
+*And Snow thought to himself: "How can one become light without first embodying each color?"*
 
 ---
 
@@ -15,9 +15,9 @@ we nibble from their beaks.
 The grass is lacquered gold, with green ennameling.  
 
 Planting our steps across cool alcoves, 
-with bones of winter sycamore.
+with bones of winter sycamore,
 
-I have come to announce something.
+We have come to announce something to ourselves.
 
 Above, the crisscrossed arches sing:
 "You are forever entering" & "You are here"
@@ -26,7 +26,7 @@ This hummingbird eucharist, we tilt
 the laden spoons of leaves
 
 We could choke on the flowers
-growing from our mouths.  
+growing from our mouths 
 
 But it is spring and the blue wind cannot hold us.
 Our wine resounds in delicate chalices

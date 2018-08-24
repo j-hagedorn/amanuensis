@@ -50,6 +50,10 @@ rid %<>%
 
 ###
 
+feather::write_feather(rid,"rid.feather")
+
+###
+
 # Make a function to join wordlists to RID
 
 join_to_rid <- function(df){
