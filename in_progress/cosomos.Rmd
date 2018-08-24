@@ -84,8 +84,9 @@ rm(cosmos_vol_1);rm(cosmos_vol_2);rm(cosmos_vol_3);rm(cosmos_vol_4);rm(cosmos_vo
 
 ```
 
-```{r get_univowels}
-univowels <- 
+```{r get_univowels, message=FALSE, warning=FALSE, include=FALSE}
+
+unnest_cosmos <- 
   cosmos %>%
   unnest_tokens(word, text, "ngrams", n = 1) %>% 
   mutate(
@@ -97,39 +98,40 @@ univowels <-
     u = str_count(word,"u"),
     y = str_count(word,"y")
   ) %>%
-  filter(
-    a > 0 & e == 0 & i == 0 & o == 0 & u == 0 & y == 0 
-    | a == 0 & e > 0 & i == 0 & o == 0 & u == 0 & y == 0 
-    | a == 0 & e == 0 & i > 0 & o == 0 & u == 0 & y == 0 
-    | a == 0 & e == 0 & i == 0 & o > 0 & u == 0 & y == 0 
-    | a == 0 & e == 0 & i == 0 & o == 0 & u > 0 & y == 0
-    | a == 0 & e == 0 & i == 0 & o == 0 & u == 0 & y > 0 
+  mutate(
+    single_vowel = 
+      a > 1 & e == 0 & i == 0 & o == 0 & u == 0 & y == 0 
+      | a == 0 & e > 1 & i == 0 & o == 0 & u == 0 & y == 0 
+      | a == 0 & e == 0 & i > 1 & o == 0 & u == 0 & y == 0 
+      | a == 0 & e == 0 & i == 0 & o > 1 & u == 0 & y == 0 
+      | a == 0 & e == 0 & i == 0 & o == 0 & u > 1 & y == 0
+      | a == 0 & e == 0 & i == 0 & o == 0 & u == 0 & y > 1 
   ) %>%
-  # Word is longer than one letter
-  filter(length(word) > 1) %>%
-  # More than one of the vowel per word
-  filter(str_count(word,"[aeiou]") > 1) %>%
+  # Tag words with length > 1 and only one of the vowel using a trailing asterisk
+  mutate(
+    word = ifelse(
+      single_vowel == T & length(word) > 1, 
+      paste0(word,"*"), 
+      word
+    )
+  ) %>%
   ungroup() %>%
   select(title:word) %>%
+  # Reassemble unnested data into lines
   nest(word) %>%
   mutate(
     text = map(data, unlist), 
     text = map_chr(text, paste, collapse = " ")
-  )
+  ) %>%
+  select(title:line,text) %>%
+  # Include only lines with tagged (*) words
+  filter(str_detect(text,"\\*"))
 
-
-%>%
-  select(word) %>% 
-  .$word %>%
-  unique()
 ```
 
-```{r unnest}
-unnest_cosmos <- 
-  cosmos %>%
-  unnest_tokens(words, text, "ngrams", n = 10) %>%
-  mutate(one_vowel = str_detect(words, pattern = paste0("^",paste(univowels, collapse = " |^")))) %>%
-  filter(one_vowel == T)
+```{r subset_lines}
+
+
   
 ```
 
