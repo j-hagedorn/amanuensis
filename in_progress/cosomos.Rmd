@@ -86,6 +86,8 @@ rm(cosmos_vol_1);rm(cosmos_vol_2);rm(cosmos_vol_3);rm(cosmos_vol_4);rm(cosmos_vo
 
 ```{r get_univowels, message=FALSE, warning=FALSE, include=FALSE}
 
+n_vowel <- 2
+
 unnest_cosmos <- 
   cosmos %>%
   unnest_tokens(word, text, "ngrams", n = 1) %>% 
@@ -100,12 +102,12 @@ unnest_cosmos <-
   ) %>%
   mutate(
     single_vowel = 
-      a > 1 & e == 0 & i == 0 & o == 0 & u == 0 & y == 0 
-      | a == 0 & e > 1 & i == 0 & o == 0 & u == 0 & y == 0 
-      | a == 0 & e == 0 & i > 1 & o == 0 & u == 0 & y == 0 
-      | a == 0 & e == 0 & i == 0 & o > 1 & u == 0 & y == 0 
-      | a == 0 & e == 0 & i == 0 & o == 0 & u > 1 & y == 0
-      | a == 0 & e == 0 & i == 0 & o == 0 & u == 0 & y > 1 
+      a > n_vowel & e == 0 & i == 0 & o == 0 & u == 0 & y == 0 
+      | a == 0 & e > n_vowel & i == 0 & o == 0 & u == 0 & y == 0 
+      | a == 0 & e == 0 & i > n_vowel & o == 0 & u == 0 & y == 0 
+      | a == 0 & e == 0 & i == 0 & o > n_vowel & u == 0 & y == 0 
+      | a == 0 & e == 0 & i == 0 & o == 0 & u > n_vowel & y == 0
+      | a == 0 & e == 0 & i == 0 & o == 0 & u == 0 & y > n_vowel 
   ) %>%
   # Tag words with length > 1 and only one of the vowel using a trailing asterisk
   mutate(
@@ -128,6 +130,11 @@ unnest_cosmos <-
   filter(str_detect(text,"\\*"))
 
 ```
+
+Need to:
+
+- get tagged words in the middle of a 20-word n-gram
+- determine additional criteria for filtering (related to content/topic)
 
 ```{r subset_lines}
 
