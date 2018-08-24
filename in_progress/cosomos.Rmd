@@ -1,0 +1,135 @@
+---
+title: "c o s o m o s"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse);library(magrittr);library(stringr);library(tidytext);library(stringdist);library(gutenbergr)
+```
+
+```{r read_humboldt, message=FALSE, warning=FALSE, include=FALSE}
+
+cosmos_vol_1 <- 
+  gutenberg_download(14565,meta_fields = c("title","author"),strip = T) %>%
+  mutate(
+    title = "Cosmos: Sketch of a Physical Description of the Universe",
+    volume = "1",
+    author = "von Humboldt, Alexander"
+  ) %>%
+  select(-gutenberg_id) %>%
+  # Remove header and footer matter
+  slice(962:17497) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+cosmos_vol_2 <- 
+  readLines("https://ia800206.us.archive.org/8/items/cosmosvolume00humbgoog/cosmosvolume00humbgoog_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "Cosmos: Sketch of a Physical Description of the Universe",
+    volume = "2",
+    author = "von Humboldt, Alexander"
+  ) %>%
+  # Remove header and footer matter
+  slice(310:20421) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+
+cosmos_vol_3 <- 
+  readLines("https://ia802700.us.archive.org/24/items/cosmosasketchap01humbgoog/cosmosasketchap01humbgoog_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "Cosmos: Sketch of a Physical Description of the Universe",
+    volume = "3",
+    author = "von Humboldt, Alexander"
+  ) %>%
+  # Remove header and footer matter
+  slice(1287:15543) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+
+cosmos_vol_4 <- 
+  readLines("https://ia800206.us.archive.org/8/items/cu31924073049839/cu31924073049839_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "Cosmos: Sketch of a Physical Description of the Universe",
+    volume = "4",
+    author = "von Humboldt, Alexander"
+  ) %>%
+  # Remove header and footer matter
+  slice(755:16985) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+
+cosmos_vol_5 <- 
+  readLines("https://ia800203.us.archive.org/27/items/cu31924073049847/cu31924073049847_djvu.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
+  mutate(
+    title = "Cosmos: Sketch of a Physical Description of the Universe",
+    volume = "5",
+    author = "von Humboldt, Alexander"
+  ) %>%
+  # Remove header and footer matter
+  slice(272:25651) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+
+cosmos <- cosmos_vol_1 %>% bind_rows(cosmos_vol_2,cosmos_vol_3,cosmos_vol_4,cosmos_vol_5)
+
+rm(cosmos_vol_1);rm(cosmos_vol_2);rm(cosmos_vol_3);rm(cosmos_vol_4);rm(cosmos_vol_5)
+
+```
+
+```{r get_univowels}
+univowels <- 
+  cosmos %>%
+  unnest_tokens(word, text, "ngrams", n = 1) %>% 
+  mutate(
+    word = as.character(word),
+    a = str_count(word,"a"),
+    e = str_count(word,"e"),
+    i = str_count(word,"i"),
+    o = str_count(word,"o"),
+    u = str_count(word,"u"),
+    y = str_count(word,"y")
+  ) %>%
+  filter(
+    a > 0 & e == 0 & i == 0 & o == 0 & u == 0 & y == 0 
+    | a == 0 & e > 0 & i == 0 & o == 0 & u == 0 & y == 0 
+    | a == 0 & e == 0 & i > 0 & o == 0 & u == 0 & y == 0 
+    | a == 0 & e == 0 & i == 0 & o > 0 & u == 0 & y == 0 
+    | a == 0 & e == 0 & i == 0 & o == 0 & u > 0 & y == 0
+    | a == 0 & e == 0 & i == 0 & o == 0 & u == 0 & y > 0 
+  ) %>%
+  # Word is longer than one letter
+  filter(length(word) > 1) %>%
+  # More than one of the vowel per word
+  filter(str_count(word,"[aeiou]") > 1) %>%
+  ungroup() %>%
+  select(title:word) %>%
+  nest(word) %>%
+  mutate(
+    text = map(data, unlist), 
+    text = map_chr(text, paste, collapse = " ")
+  )
+
+
+%>%
+  select(word) %>% 
+  .$word %>%
+  unique()
+```
+
+```{r unnest}
+unnest_cosmos <- 
+  cosmos %>%
+  unnest_tokens(words, text, "ngrams", n = 10) %>%
+  mutate(one_vowel = str_detect(words, pattern = paste0("^",paste(univowels, collapse = " |^")))) %>%
+  filter(one_vowel == T)
+  
+```
+
