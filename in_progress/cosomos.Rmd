@@ -134,6 +134,9 @@ lead_10 <- unnest_cosmos %>% top_n(-10,word_n) %>% filter(running != 0)
 # Count of 11 includes tagged word
 lag_10 <-  unnest_cosmos %>% top_n(11,word_n) %>% ungroup() %>% filter(running != max(running))
 
+# Define function to count distinct letters
+count_distinct_chars <- function(x) map_int(map(x, function(x) unique(strsplit(x, "")[[1]])), length)
+
 cosmos_vowel_lines <- 
   lead_10 %>% 
   bind_rows(lag_10) %>%
@@ -145,13 +148,22 @@ cosmos_vowel_lines <-
     running = cumsum(as.numeric(tag))
   ) %>%
   group_by(title,author,volume,running) %>%
+  select(title,author,volume,running,word) %>%
+  distinct() %>%
   # Reassemble unnested data into lines
   nest(word) %>%
   mutate(
     text = map(data, unlist), 
     text = map_chr(text, paste, collapse = " ")
   ) %>%
-  select(title:volume,text) 
+  select(title:volume,text) %>%
+  mutate(
+    distinct_letters = count_distinct_chars(text),
+    all_letters = nchar(text),
+    ratio_distinct = round(distinct_letters/all_letters*100, digits = 1)
+  ) %>%
+  select(-distinct_letters,-all_letters) %>%
+  arrange(ratio_distinct)
 
 rm(lead_10);rm(lag_10);rm(unnest_cosmos)
 
