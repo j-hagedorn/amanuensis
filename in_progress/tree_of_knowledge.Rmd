@@ -1,0 +1,83 @@
+---
+title: "Tree of Knowledge"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse);library(magrittr);library(stringr)
+library(tidytext);library(stringdist);library(gutenbergr)
+```
+
+```{r}
+nazianzen <- 
+  readLines("http://www.ccel.org/ccel/schaff/npnf207.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Orations",
+    author = "St. Gregory Nazianzen"
+  ) %>%
+  # Remove header and footer matter
+  slice(23120:49770) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+```
+
+```{r}
+damascene <- 
+  readLines("http://www.ccel.org/ccel/schaff/npnf209.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Exposition of the Orthodox Faith",
+    author = "St. John Damascene"
+  ) %>%
+  # Remove header and footer matter
+  slice(28099:38801) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+athanasius <- 
+  readLines("http://www.ccel.org/ccel/schaff/npnf204.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "St. Athanasius"
+  ) %>%
+  # Remove header and footer matter
+  slice(9337:66773) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+origen <- 
+  readLines("http://www.ccel.org/ccel/schaff/anf04.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "Origen"
+  ) %>%
+  # Remove header and footer matter
+  slice(25273:66916) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+fathers <- nazianzen %>% bind_rows(damascene,athanasius,origen)
+rm(list = c("nazianzen","damascene","athanasius","origen"))
+```
+
+```{r}
+tst <-
+fathers %>%
+  mutate(text = str_replace_all(text,"tree of ","tree of* "))
+  # mutate(text = str_extract(text, "([^\\s]+\\s){100}tree of(\\s[^\\s]+){100}")) %>%
+  select(text,author)
+```
+
