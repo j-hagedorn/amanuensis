@@ -69,6 +69,22 @@ origen <-
 ```
 
 ```{r}
+justin <- 
+  readLines("http://www.ccel.org/ccel/schaff/anf01.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "The Apostolic Fathers",
+    author = "Justin Martyr and Irenaeus"
+  ) %>%
+  # Remove header and footer matter
+  slice(25273:66916) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+
+```{r}
 fathers <- nazianzen %>% bind_rows(damascene,athanasius,origen)
 rm(list = c("nazianzen","damascene","athanasius","origen"))
 ```
