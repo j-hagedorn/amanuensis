@@ -3,12 +3,32 @@
 library(tidyverse);library(stringr);library(tidytext); library(magrittr)
 library(qdapDictionaries)
 
+wordlists <- list()
+wordlists$a <- "https://raw.githubusercontent.com/paritytech/wordlist/master/res/wordlist.txt"
+wordlists$b <- "https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt"
+wordlists$c <- "http://scrapmaker.com/data/wordlists/language/prepositions.txt"
+
+words <- tbl_df(DICTIONARY) %>% select(word)
+
+for (i in wordlists){
+  x <- read.delim(i,  sep = "", col.names = "word")
+  words <- bind_rows(words,x)
+  words <- words %>% 
+    mutate(
+      word = str_trim(word),
+      word = str_to_lower(word),
+      word = str_remove_all(word,"[^[:alpha:] ]")
+    ) %>% distinct()
+  rm(x);rm(i)
+}
+
 # Read in lexicon
-words1 <- read.delim("../english-words/words.txt",  sep = "", col.names = "word")
-words2 <- read.delim("../english-words/words2.txt", sep = "", col.names = "word")
-words3 <- read.delim("../english-words/words3.txt", sep = "", col.names = "word")
-word_corpus <- corpus %>% unnest_tokens(word,text,"words") %>% select(word)
-words4 <- tbl_df(DICTIONARY) %>% select(word)
+word_corpus <- corpus %>% 
+  unnest_tokens(word,text,"words") %>% 
+  mutate(word = str_remove_all(word,"[^[:alpha:] ]")) %>%
+  select(word) %>% distinct()
+
+words <- bind_rows(words,word_corpus) %>% distinct() %>% arrange(word)
 
 # Find all prepositional phrases (join to wordlist)
 prepositions <- 
@@ -19,9 +39,5 @@ prepositions <-
   rename(word = X1) %>%
   mutate(word = str_trim(word))
 
-words <- rbind(words1,words2,words3,words4,word_corpus,prepositions)
-rm(words1);rm(words2);rm(words3);rm(words4);rm(word_corpus)
 
-words %<>% distinct()
 
-# Find all words with e.g. only 1 vowel

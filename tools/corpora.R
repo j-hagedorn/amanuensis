@@ -1,4 +1,5 @@
 ## Get series of books for use as corpora
+library(gutenbergr)
 
 poem_corpus <-
   gutenberg_download(
