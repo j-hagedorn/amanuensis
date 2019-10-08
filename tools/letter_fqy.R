@@ -77,7 +77,7 @@ letter_fqy <-
     consonant = str_count(word,"[bcdfghjklmnpqrstvwxz]"),
     # Identify types of sounds
     sibilants = str_count(word,"s|sh|z|x"), 
-    fricatives = str_count(word,"f|v|s|sh|z|x"), 
+    fricatives = str_count(word,"f|v|s|sh|th|z|x"), 
     plosives = str_count(word,"p|b"), 
     dentals = str_count(word,"t|d|th"), 
     nasals = str_count(word,"m|n|ng"), 
