@@ -10,7 +10,7 @@ kjv <- feather::read_feather("../text_files/bible/kjv.feather")
 ```
 
 ```{r results='asis'}
-term <- regex("hand |hand[[:punct:]]")
+term <- regex("by fire |fire[[:punct:]]")
 
 search <- 
   kjv %>%
