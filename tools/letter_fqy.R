@@ -1,10 +1,10 @@
 # letter_fqy.R
 
 # Load libraries
-library(tidyverse); library(tidytext); library(fuzzyjoin)
+library(tidyverse); library(tidytext); library(fuzzyjoin); library(phonics)
 
 # Source dependencies
-source("get_words.R"); source("read_RID.R")
+source("tools/get_words.R"); source("tools/read_RID.R")
 
 # Create function to count unique chars in string
 library(inline)
@@ -140,6 +140,14 @@ rm(k_df); rm(k_groups)
 
 lexicon <-
   letter_fqy %>%
+  # Add phonetic versions of words
+  mutate(
+    phon_phonex = phonex(word,10),
+    phon_mra    = mra_encode(word,10),
+    phon_meta   = metaphone(word,10),
+    phon_onca   = onca(word,10),
+    phon_caver  = caverphone(word,10,T)
+  ) %>%
   # filter out unnecessary words
   filter(punct == F & number == F & proper == F) %>%
   select(-punct,-number,-proper)
