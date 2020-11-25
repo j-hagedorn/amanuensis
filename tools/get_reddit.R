@@ -6,9 +6,13 @@
 
 library(tidyverse); library(jsonlite)
 
-# found_urls <- RedditExtractoR::reddit_urls(search_terms="suicide",subreddit = "AskReddit",cn_threshold = 50)
-
-link_id <- "j0z4lp"
+found_urls <- 
+  RedditExtractoR::reddit_urls(
+    search_terms="suicide",
+    subreddit = "AskReddit",
+    page_threshold = 10,
+    cn_threshold = 50
+  )
 
 get_reddit <- function(link_id,rate_limit = 200){
   
@@ -31,26 +35,8 @@ get_reddit <- function(link_id,rate_limit = 200){
   
 }
 
+reasons_to_live <- get_reddit("j0z4lp")
 
-
-# Get list of comment ids from Pushshift API
-comment_id_list <- fromJSON(paste0("https://api.pushshift.io/reddit/submission/comment_ids/",link_id))
-
-# Split into chunks to limit API query rate (assumes 200/minute)
-chunks <- split(comment_id_list$data, ceiling(seq_along(comment_id_list$data)/200))
-
-df <- tibble()
-
-for (i in chunks){
-  
-  x <- fromJSON(paste0("https://api.pushshift.io/reddit/comment/search?ids=",paste(i,collapse = ",")))
-  x <- x$data %>% select(id,parent_id,link_id,subreddit,author_fullname,author,created_utc,body,score)
-  df <- bind_rows(df,x)
-  Sys.sleep(60)
-  
-}
-
-
-
+# write_csv(reasons_to_live,"gleanings/reddit_df.csv")
 
 # "https://www.reddit.com/r/redditdev/comments/agw2si/retrieve_all_comments_from_a_subreddit/"
