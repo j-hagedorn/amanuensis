@@ -19,10 +19,10 @@ get_pdf <- function(pdf_url){
   
 }
 
-ong <- get_pdf("https://monoskop.org/images/d/db/Ong_Walter_J_Orality_and_Literacy_2nd_ed.pdf")
+# Examples
 
-philokalia <- get_pdf("https://holybooks.com/wp-content/uploads/Philokalia.pdf")
-
-bohm <- get_pdf("http://www.gci.org.uk/Documents/DavidBohm-WholenessAndTheImplicateOrder.pdf")
+# ong <- get_pdf("https://monoskop.org/images/d/db/Ong_Walter_J_Orality_and_Literacy_2nd_ed.pdf")
+# philokalia <- get_pdf("https://holybooks.com/wp-content/uploads/Philokalia.pdf")
+# bohm <- get_pdf("http://www.gci.org.uk/Documents/DavidBohm-WholenessAndTheImplicateOrder.pdf")
 
 

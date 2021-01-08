@@ -46,10 +46,7 @@ for(i in words$word[111:250]) {
   x %<>% bind_rows(df)
 }
 
-
 # Find all words that can be created by replacing one letter in word
-
-
 
 # Calculated 'hamming' stringdist
 stringdistmatrix("leviathan",words, method='hamming')
