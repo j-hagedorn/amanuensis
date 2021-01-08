@@ -153,8 +153,10 @@ vignettes/*.pdf
 *.html
 *.feather
 
+
 # Latex output
 *.pdf
 *.tex
 *.aux
 *.out
+gleanings/reddit_df.zip
