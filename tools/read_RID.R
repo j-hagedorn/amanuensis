@@ -2,7 +2,7 @@
 # Read in 'Regressive Imagery Dictionary' for use in text mining
 # http://www.kovcomp.co.uk/wordstat/RID.html
 
-library(tidyverse); library(stringr); library(magrittr)
+library(tidyverse); library(magrittr)
 
 rid <- readLines("text_files/RID.CAT") 
 rid <- as.data.frame(rid)

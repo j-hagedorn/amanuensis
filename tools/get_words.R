@@ -23,6 +23,8 @@ for (i in wordlists){
 }
 
 # Read in lexicon
+
+source("tools/get_books.R")
 word_corpus <- corpus %>% 
   unnest_tokens(word,text,"words") %>% 
   mutate(word = str_remove_all(word,"[^[:alpha:] ]")) %>%
