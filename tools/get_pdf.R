@@ -25,3 +25,4 @@ philokalia <- get_pdf("https://holybooks.com/wp-content/uploads/Philokalia.pdf")
 
 bohm <- get_pdf("http://www.gci.org.uk/Documents/DavidBohm-WholenessAndTheImplicateOrder.pdf")
 
+
