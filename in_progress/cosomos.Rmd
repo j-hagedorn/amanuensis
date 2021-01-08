@@ -173,10 +173,22 @@ Need to:
 
 - determine additional criteria for filtering (related to content/topic)
 
+Gleanings:
+
+involuntarily associate themselves* with historical
+our minds the extinction of suddenly resplendent* stars in cassiopeia cygnus and serpentarius
+cause which has hitherto rendered* terrestrial phenomena less amenable
+being drawn between* the small
+the intimate relation between* light heat electricity
+with an elevation elsewhere* as for instance
+resting place of glorious colonos* where the melodious nightingale
+lines which in older systems represent* arbitrarily and ungracefully horizontally ranged
+inclosed in larger and deeper* fissures when atmosphere possessed
+an intermediate character situated between* the northern and southern
+
 ```{r subset_lines}
 
 cosmos_vowel_lines$text
-  
   
 ```
 

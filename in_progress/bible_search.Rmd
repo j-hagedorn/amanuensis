@@ -1,0 +1,24 @@
+---
+title: "Hand"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse); library(magrittr)
+kjv <- feather::read_feather("../text_files/bible/kjv.feather")
+```
+
+```{r results='asis'}
+term <- regex("by fire |fire[[:punct:]]")
+
+search <- 
+  kjv %>%
+  ungroup() %>%
+  filter(str_detect(text,term)) %>%
+  mutate(combined = paste0(text," (",book_name," ",orig_chapter,":",orig_verse," ",str_to_upper(trans),")")) %>%
+  summarise(combined = paste(combined,collapse = " ")) 
+  
+cat(search$combined)
+```
+

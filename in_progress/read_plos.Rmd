@@ -6,7 +6,7 @@ output: html_notebook
 ```{r setup}
 knitr::opts_chunk$set(echo = F, warning = F)
 library(tidyverse); library(tidytext); library(stringr)
-library(stringdist); library(fulltext); library(rplos)
+library(stringdist); library(fulltext); library(rplos);library(pubchunks)
 ```
 
 
@@ -30,8 +30,8 @@ x <-
     )$data$id, 
     from = "plos"
   ) %>% 
-  chunks(what = c("title","body")) %>% 
-  tabularize() %>%
+  pub_chunks(sections = c("title","body")) %>% 
+  pub_tabularize() %>%
   .$plos
 
 ```
