@@ -1,0 +1,159 @@
+---
+title: "Tree of Knowledge"
+output: html_notebook
+---
+
+```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse);library(magrittr);library(stringr)
+library(tidytext);library(stringdist);library(gutenbergr)
+```
+
+```{r}
+nazianzen <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/npnf207/cache/npnf207.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Orations",
+    author = "St. Gregory Nazianzen"
+  ) %>%
+  # Remove header and footer matter
+  slice(23120:49770) %>%
+  # Number lines for reference
+  mutate(line = row_number()) 
+```
+
+```{r}
+damascene <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/npnf209/cache/npnf209.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Exposition of the Orthodox Faith",
+    author = "St. John Damascene"
+  ) %>%
+  # Remove header and footer matter
+  slice(28099:38801) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+athanasius <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/npnf204/cache/npnf204.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "St. Athanasius"
+  ) %>%
+  # Remove header and footer matter
+  slice(9337:66773) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+origen <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/anf04/cache/anf04.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "Origen"
+  ) %>%
+  # Remove header and footer matter
+  slice(25273:66916) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+justin <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/anf01/cache/anf01.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "St. Justin Martyr"
+  ) %>%
+  # Remove header and footer matter
+  slice(13838:14878) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+irenaeus <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/anf01/cache/anf01.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Against Heresies",
+    author = "St. Irenaeus"
+  ) %>%
+  # Remove header and footer matter
+  slice(14879:66909) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+ephrem <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/npnf213/cache/npnf213.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Hymns",
+    author = "St. Ephrem the Syrian"
+  ) %>%
+  # Remove header and footer matter
+  slice(10988:13403) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+nyssa <- 
+  readLines("https://www.ccel.org/ccel/s/schaff/npnf205/cache/npnf205.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "St. Gregory of Nyssa"
+  ) %>%
+  # Remove header and footer matter
+  slice(2765:48917) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+basil <- 
+  readLines("https://ccel.org/ccel/s/schaff/npnf208/cache/npnf208.txt",skipNul = T) %>% 
+  as.data.frame() %>%
+  rename_all(funs(str_replace_all(.)), ".", "text") %>%
+  mutate(
+    title = "Selected Writings",
+    author = "St. Basil"
+  ) %>%
+  # Remove header and footer matter
+  slice(7341:40508) %>%
+  # Number lines for reference
+  mutate(line = row_number())
+```
+
+```{r}
+fathers <- nazianzen %>% bind_rows(basil,damascene,athanasius,origen,irenaeus,justin,nyssa,ephrem)
+rm(list = c("basil","nazianzen","damascene","athanasius","origen","irenaeus","justin","nyssa","ephrem"))
+feather::write_feather(fathers,"fathers.feather")
+```
+
+```{r}
+tst <- feather::read_feather("fathers.feather")
+fathers %>%
+  mutate(text = str_replace_all(text,"tree of ","tree of* "))
+  # mutate(text = str_extract(text, "([^\\s]+\\s){100}tree of(\\s[^\\s]+){100}")) %>%
+  select(text,author)
+```
+
