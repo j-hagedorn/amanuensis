@@ -1,52 +1,41 @@
 # clouds / morphose
-
 # Find words which are the closest
 
-library(stringdist); library(tidyverse); library(tidytext)
+library(stringdist); library(tidyverse); library(fuzzyjoin)
+lexicon <- feather::read_feather("texts/output/lexicon.feather")
 
-str1 <- words %>% anti_join(stop_words) %>% sample_n(5000)
-str2 <- words %>% anti_join(stop_words) %>% sample_n(5000)
-
-str1[[1]]
+seed_word = "erode"
 
 
-morphose <- 
-  # Create distance matrix computing string diff
-  stringdistmatrix(str1$word, str2$word, method='hamming', useNames = T)  %>%
-  as.data.frame() %>%
-  mutate(rawtext = row.names(.)) %>%
-  select(rawtext, everything()) %>%
-  group_by(rawtext) %>%
-  gather(coded,score,-rawtext) %>%
-  mutate(rank = row_number(score)) %>%
-  filter(score == 1)
+df <-
+  as_tibble(seed_word) %>%
+  rename(word = value) %>%
+  stringdist_left_join(
+    lexicon %>% mutate(word = as.character(word)) %>% select(word), 
+    by = "word", 
+    method = "osa",
+    max_dist = 1
+  ) %>%
+  rename(word_0 = word.x, word = word.y)
 
+# i = 1
 
-tst <- morphose %>% kmeans(50) 
-
-tst <- tst %>% augment(morphose) %>% select(.cluster, everything())
-
-# Start with word (either passed as arg or randomly selected)
-
-x <- data.frame()
-
-for(i in words$word[111:250]) {
-  dist <- stringdist(i,words$word)
-  df <- words
-  df$dist <- dist
+for (i in 1:2) {
   
-  df %<>% 
-    mutate(
-      word1 = i,
-      word2 = word
-    ) %>%
-    filter(dist == 1) %>%
-    select(word1,word2)
+  x <-
+    df %>%
+    stringdist_left_join(
+      lexicon %>% mutate(word = as.character(word)) %>% select(word), 
+      by = "word", 
+      method = "osa",
+      max_dist = 1
+    ) 
   
-  x %<>% bind_rows(df)
+  # Rename cols to allow next join
+  names(x) <- c("word_0",glue::glue("word_{n1}", n1 = rep(1:i)),"word")
+  
+  df <- x
+  
 }
 
-# Find all words that can be created by replacing one letter in word
 
-# Calculated 'hamming' stringdist
-stringdistmatrix("leviathan",words, method='hamming')
