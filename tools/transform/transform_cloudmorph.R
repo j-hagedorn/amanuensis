@@ -2,9 +2,9 @@
 # Find words which are the closest
 
 library(stringdist); library(tidyverse); library(fuzzyjoin)
-lexicon <- feather::read_feather("texts/output/lexicon.feather")
+lexicon <- feather::read_feather("../texts/output/lexicon.feather")
 
-seed_word = "erode"
+# seed_word = "append"
 
 morph <- function(seed_word, n_changes = 5, dist_method = "osa", max_dist = 1){
   
@@ -14,8 +14,8 @@ morph <- function(seed_word, n_changes = 5, dist_method = "osa", max_dist = 1){
     stringdist_left_join(
       lexicon %>% mutate(word = as.character(word)) %>% select(word), 
       by = "word", 
-      method = "osa",
-      max_dist = 1
+      method = dist_method,
+      max_dist = max_dist
     ) %>%
     filter(word.x != word.y) %>%
     rename(word_0 = word.x, word = word.y)
@@ -27,8 +27,8 @@ morph <- function(seed_word, n_changes = 5, dist_method = "osa", max_dist = 1){
       stringdist_left_join(
         lexicon %>% mutate(word = as.character(word)) %>% select(word), 
         by = "word", 
-        method = "osa",
-        max_dist = 1
+        method = dist_method,
+        max_dist = max_dist
       ) %>%
       filter(word.x != word.y) %>%
       filter(word.y != seed_word)
