@@ -1,0 +1,20 @@
+---
+title: "Metamorphoses"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse);library(qdapDictionaries)
+source("../tools/transform/transform_cloudmorph.R")
+```
+
+```{r}
+clouds <- morph("clouds")
+
+clouds %>%
+  group_by_at(vars(word_0:word_2)) %>%
+  summarize(
+    n_words = n_distinct(word)
+  )
+```
+
