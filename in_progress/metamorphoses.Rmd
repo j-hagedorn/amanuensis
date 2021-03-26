@@ -8,13 +8,69 @@ library(tidyverse);library(qdapDictionaries)
 source("../tools/transform/transform_cloudmorph.R")
 ```
 
-```{r}
-clouds <- morph("clouds")
+```{r eval=FALSE, include=FALSE}
+clouds <- morph("clouds"); bough  <- morph("bough")
 
-clouds %>%
-  group_by_at(vars(word_0:word_2)) %>%
-  summarize(
-    n_words = n_distinct(word)
-  )
+rm(list = c("clouds","bough","garbage"))
 ```
 
+clouds	clours	colours	colors	dolors
+clouds	flouds	flouts	floats	flats
+bough	rough	rouge	rouse	house
+bough	rough	rouge	route	rouse
+bough	rough	rouge	route	rote
+bough	tough	touch	torch	torah
+bough	boughs bought	ought	sought
+bough	boughs	bought	brought	drought
+
+```{r}
+
+cling <- morph("cling")
+
+cling %>%
+  group_by_at(vars(word_0:word_2)) %>%
+  summarize(n_words = n_distinct(word)) %>%
+  View()
+
+cling %>%
+  filter(
+    word_1 %in% c(""),
+    word_2 %in% c("")
+  ) %>%
+  group_by_at(vars(word_0:word_3)) %>%
+  summarize(n_words = n_distinct(word)) %>%
+  View()
+
+```
+
+
+time-lapse of clouds across the mind
+changing by erosion or accretion
+
+Snow, lavender and gold
+
+Does the meaning of a stone change after the wave?
+The meaning of a cloud when the celebrant wind tears it?
+
+
+Word as raw element, morphs slightly.
+Sense tenuously coheres.  It dissipates with the smallest tick, a letter.
+
+One finds a word.  Leaves it in the dictionary, where it changes.
+A word is said.  Years move.  It changes.
+Between a book's covers.   Within the folds of the mind.  
+
+We hear a word, and it means all of its almost twins at once.
+As possible futures, hallways it could have been and is.
+
+There is one universe, not millions.  
+There are infinite universes, each only a moment long.  
+A million sequential, momentary universes.
+
+We live across them.
+
+---
+
+Experiments:
+
+lace
