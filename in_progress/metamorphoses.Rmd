@@ -9,7 +9,7 @@ source("../tools/transform/transform_cloudmorph.R")
 ```
 
 ```{r eval=FALSE, include=FALSE}
-clouds <- morph("clouds"); bough  <- morph("bough")
+clouds <- morph("clouds"); bough <- morph("bough")
 
 rm(list = c("clouds","bough","garbage"))
 ```
@@ -22,23 +22,27 @@ bough	rough	rouge	route	rote
 bough	tough	touch	torch	torah
 bough	boughs bought	ought	sought
 bough	boughs	bought	brought	drought
+inform unform uniform luniform
+inform enform enfort effort
 
 ```{r}
 
-cling <- morph("cling")
+# inform, cling, cohere, human
 
-cling %>%
+x <- morph("inform")
+
+x %>%
   group_by_at(vars(word_0:word_2)) %>%
   summarize(n_words = n_distinct(word)) %>%
   View()
 
-cling %>%
+x %>%
   filter(
-    word_1 %in% c(""),
-    word_2 %in% c("")
+    word_1 %in% c("enform"),
+    word_2 %in% c("enfort")
   ) %>%
   group_by_at(vars(word_0:word_3)) %>%
-  summarize(n_words = n_distinct(word)) %>%
+  # summarize(n_words = n_distinct(word)) %>%
   View()
 
 ```
