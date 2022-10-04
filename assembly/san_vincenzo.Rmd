@@ -105,8 +105,8 @@ rm(basil_1); rm(basil_2); rm(basil_4)
 ```
 
 ```{r pseudo_dionysius, message=FALSE, warning=FALSE, include=FALSE}
-pseudo_dionysius_1 <-
-  readLines("https://ia800305.us.archive.org/30/items/worksofdionysius00pseu/worksofdionysius00pseu_djvu.txt",skipNul = T) %>% 
+pseudo_dionysius <-
+  readLines("https://ccel.org/ccel/d/dionysius/works/cache/works.txt",skipNul = T) %>% 
   as.data.frame() %>%
   rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
   slice(670:16739) %>%
@@ -118,7 +118,7 @@ pseudo_dionysius_1 <-
   mutate(line = row_number()) 
 
 pseudo_dionysius_2 <-
-  readLines("https://ia800209.us.archive.org/7/items/worksofdionysius02pseu/worksofdionysius02pseu_djvu.txt",skipNul = T) %>% 
+  readLines("https://ccel.org/ccel/d/dionysius/celestial/cache/celestial.txt",skipNul = T) %>% 
   as.data.frame() %>%
   rename_all(funs(gsub(.)), pattern = ".", replacement = "text") %>%
   slice(775:7005) %>%
