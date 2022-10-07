@@ -4,8 +4,7 @@ output: html_notebook
 ---
 
 ```{r load_libs, message=FALSE, warning=FALSE, include=FALSE}
-library(tidyverse); library(magrittr); library(stringr); library(tidytext)
-library(stringdist); library(gutenbergr)
+library(tidyverse); library(tidytext) library(stringdist) #; library(gutenbergr)
 ```
 
 Scrape and gather the books which are most likely to have been kept at St. Vincenzo Abbey prior to the Saracen attack of 881.  The texts include:
