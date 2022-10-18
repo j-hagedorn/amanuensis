@@ -160,3 +160,4 @@ vignettes/*.pdf
 *.aux
 *.out
 gleanings/reddit_df.zip
+*.rds
