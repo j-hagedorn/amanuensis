@@ -1,0 +1,77 @@
+---
+title: "Untitled"
+output: html_document
+date: "2022-10-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# source("../assembly/get_ethereal.R")
+library(tidyverse); library(tidytext); library(stringdist)
+```
+
+```{r get_grams, eval=FALSE, include=FALSE}
+df <- read_rds("../data/fathers.rds")
+
+n_3 <-
+  df %>%
+  unnest_tokens(ngram, text, token = "ngrams", n = 3) %>%
+  group_by(ngram) %>%
+  summarize(
+    n = n(),
+    n_src = n_distinct(title)
+  ) %>%
+  filter(n > 100) %>%
+  mutate(
+    n_words = str_count(ngram,"\\W+") + 1
+  )
+
+n_6 <-
+  df %>%
+  unnest_tokens(ngram, text, token = "ngrams", n = 6) %>%
+  group_by(ngram) %>%
+  summarize(
+    n = n(),
+    n_src = n_distinct(title)
+  ) %>%
+  filter(n > 5) %>%
+  mutate(
+    n_words = str_count(ngram,"\\W+") + 1
+  )
+
+n_grams <- bind_rows(n_3,n_6)
+
+rm(n_3); rm(n_6)
+
+write_rds(n_grams,"../data/fathers_ngrams.rds")
+
+```
+
+```{r}
+df <- 
+  read_rds("../data/fathers.rds") %>%
+  mutate(n = row_number())
+n_grams <- 
+  read_rds("../data/fathers_ngrams.rds") %>%
+  mutate(id = row_number())
+```
+
+```{r eval=FALSE, include=FALSE}
+rid <- feather::read_feather("../rid.feather")
+rid_per <-
+  n_grams %>%
+  unnest_tokens(word,ngram) %>%
+  fuzzyjoin::regex_join(
+    rid %>% filter(!str_detect(regex_word,"\\(")), 
+    by = c("word" = "regex_word"), 
+    mode = "inner", ignore_case = T
+  ) %>%
+  rename(word = word.x) %>%
+  group_by(id,level_3) %>%
+  summarize(n = n()) %>%
+  pivot_wider(names_from = level_3, values_from = n)
+
+n_grams <- n_grams %>% left_join(rid_per, by = c("id"))
+
+```
+
