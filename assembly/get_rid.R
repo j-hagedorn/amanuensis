@@ -4,7 +4,7 @@
 
 library(tidyverse); library(magrittr)
 
-rid <- readLines("text_files/RID.CAT") 
+rid <- readLines("texts/input/RID.CAT") 
 rid <- as.data.frame(rid)
 
 rid %<>% 
